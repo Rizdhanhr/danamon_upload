@@ -134,8 +134,8 @@
                             table.ajax.reload();
                         },
                         error: function(error) {
-                            alertFail('Error, please contact administrator.');
 
+                            alertFail(error.responseJSON.error_message);
                         }
                     });
                 }

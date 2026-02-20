@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UploadRecipientController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -14,6 +15,8 @@ use App\Http\Controllers\UserController;
 Route::middleware(['guest'])->group(function () {
     Route::get('/login',[AuthController::class,'index'])->name('login.index');
     Route::post('/login',[AuthController::class,'login'])->name('login.post');
+    Route::post('/login/recaptcha',[AuthController::class,'verifyRecaptcha'])->name('login.recaptcha');
+    Route::post('/login/otp',[AuthController::class,'verifyOtp'])->name('login.otp');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -28,5 +31,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user/data',[UserController::class,'getData'])->name('user.data');
     Route::post('/user/update-password',[UserController::class,'updatePassword'])->name('user.password');
     Route::resource('/user',UserController::class);
+
+
+    Route::resource('/upload-recipient', UploadRecipientController::class);
+    Route::post('/upload-recipient/data', [UploadRecipientController::class,'getData'])->name('upload-recipient.data');
 });
 

@@ -11,12 +11,13 @@
             <a type="button" href="{{ route('user.create') }}" class="btn btn-primary btn-sm">Tambah Data</a>
         </div> --}}
             <div class="card-body">
-                <form method="POST" action="{{ route('user.update',$user->id) }}">
+                <form method="POST" action="{{ route('user.update', $user->id) }}">
                     @csrf
                     @method('PUT')
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Name</label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name',$user->name) }}">
+                        <label for="exampleInputEmail1" class="form-label">Name <span style="color:red;">*</span></label>
+                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
+                            value="{{ old('name', $user->name) }}">
                         <span style="color:red;">
                             @error('name')
                                 {{ $message }}
@@ -24,8 +25,9 @@
                         </span>
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Email</label>
-                        <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email',$user->email) }}">
+                        <label for="exampleInputEmail1" class="form-label">Email <span style="color:red;">*</span></label>
+                        <input type="email" class="form-control @error('email') is-invalid @enderror" name="email"
+                            value="{{ old('email', $user->email) }}">
                         <span style="color:red;">
                             @error('email')
                                 {{ $message }}
@@ -33,15 +35,16 @@
                         </span>
                     </div>
                     <div class="mb-3">
-                        <label class='form-label' for="role">Role</label>
+                        <label class='form-label' for="role">Role <span style="color:red;">*</span></label>
                         <select class="form-select-sm @error('role') is-invalid @enderror" id="role" name='role'>
                             @foreach ($role as $r)
-                                <option {{ old('role',$user->role_id) == $r->id? 'selected' : '' }} value="{{ $r->id }}">{{ $r->name }}</option>
+                                <option {{ old('role', $user->role_id) == $r->id ? 'selected' : '' }}
+                                    value="{{ $r->id }}">{{ $r->name }}</option>
                             @endforeach
                         </select>
                         <span style="color: red;">
                             @error('role')
-                            {{ $message }}
+                                {{ $message }}
                             @enderror
                         </span>
                     </div>
@@ -58,15 +61,12 @@
 
 @endsection
 @push('script')
-<script>
-    $(document).ready(function() {
-        $('#role').select2({
-            theme: "bootstrap-5",
-            width: '100%'
+    <script>
+        $(document).ready(function() {
+            $('#role').select2({
+                theme: "bootstrap-5",
+                width: '100%'
+            });
         });
-    });
-
-
-
-</script>
+    </script>
 @endpush

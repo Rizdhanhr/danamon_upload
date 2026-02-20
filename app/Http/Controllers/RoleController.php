@@ -31,14 +31,6 @@ class RoleController extends Controller implements HasMiddleware
          ];
      }
 
-    // public function __construct()
-    // {
-    //      $this->middleware('can:view-role', ['only' => ['index','getData']]);
-    //      $this->middleware('can:create-role', ['only' => ['create','store']]);
-    //      $this->middleware('can:update-role', ['only' => ['edit','update']]);
-    //      $this->middleware('can:delete-role', ['only' => ['destroy']]);
-    // }
-
     public function index()
     {
         return view('role.index');
@@ -69,7 +61,7 @@ class RoleController extends Controller implements HasMiddleware
             return $action;
         })
         ->editColumn('updated_at', function ($row){
-            return date('Y-m-d',strtotime($row->updated_at));
+            return date('Y-m-d H:i:s',strtotime($row->updated_at));
         })
 
         ->rawColumns(['action','updated_at'])
@@ -105,8 +97,8 @@ class RoleController extends Controller implements HasMiddleware
     {
        
         $request->validate([
-            'name' => 'required|max:255',
-            'description' => 'required|max:255'
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:255'
         ]);
       
         try{
@@ -179,7 +171,7 @@ class RoleController extends Controller implements HasMiddleware
         ]);
 
         $role = Role::findOrFail($id);
-        if($role->is_super_admin == 1 || $role->id != Auth::user()->role_id){
+        if($role->is_super_admin === 1 || $role->id === Auth::user()->role_id){
             abort(403);
         }
         
@@ -192,7 +184,7 @@ class RoleController extends Controller implements HasMiddleware
 
             DB::commit();
 
-            return redirect()->route('role.index')->with('success', 'Data Saved');
+            return redirect()->route('role.index')->with('success', 'Data Updated');
 
         }catch(\Exception $e){
             DB::rollback();
@@ -207,11 +199,17 @@ class RoleController extends Controller implements HasMiddleware
      */
     public function destroy(string $id)
     {
-        
         $role = Role::findOrFail($id);
-        if($role->is_super_admin == 1 || $role->id != Auth::user()->role_id){
+        if($role->is_super_admin === 1 || $role->id === Auth::user()->role_id){
             abort(403);
         }
+
+        if ($role->user()->exists()) {
+            return response()->json([
+                'error_message' => 'Role still assigned to active users'
+            ], 422);
+        }
+
         $role->delete();
 
         return response()->json(['success' => 'Data Deleted'],200);

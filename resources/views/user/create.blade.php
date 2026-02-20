@@ -14,8 +14,9 @@
                 <form method="POST" action="{{ route('user.store') }}">
                     @csrf
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Name</label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}">
+                        <label for="exampleInputEmail1" class="form-label">Name <span style="color:red;">*</span></label>
+                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
+                            value="{{ old('name') }}">
                         <span style="color:red;">
                             @error('name')
                                 {{ $message }}
@@ -23,8 +24,9 @@
                         </span>
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Email</label>
-                        <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}">
+                        <label for="exampleInputEmail1" class="form-label">Email <span style="color:red;">*</span></label>
+                        <input type="email" class="form-control @error('email') is-invalid @enderror" name="email"
+                            value="{{ old('email') }}">
                         <span style="color:red;">
                             @error('email')
                                 {{ $message }}
@@ -32,21 +34,24 @@
                         </span>
                     </div>
                     <div class="mb-3">
-                        <label class='form-label' for="role">Role</label>
+                        <label class='form-label' for="role">Role <span style="color:red;">*</span></label>
                         <select class="form-select-sm @error('role') is-invalid @enderror" id="role" name='role'>
                             @foreach ($role as $r)
-                                <option {{ old('role') == $r->id? 'selected' : '' }} value="{{ $r->id }}">{{ $r->name }}</option>
+                                <option {{ old('role') == $r->id ? 'selected' : '' }} value="{{ $r->id }}">
+                                    {{ $r->name }}</option>
                             @endforeach
                         </select>
                         <span style="color: red;">
                             @error('role')
-                            {{ $message }}
+                                {{ $message }}
                             @enderror
                         </span>
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Password</label>
-                        <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" value="{{ old('password') }}">
+                        <label for="exampleInputEmail1" class="form-label">Password <span
+                                style="color:red;">*</span></label>
+                        <input type="password" class="form-control @error('password') is-invalid @enderror" name="password"
+                            value="{{ old('password') }}">
                         <span style="color:red;">
                             @error('password')
                                 {{ $message }}
@@ -55,8 +60,10 @@
                         <div id="emailHelp" class="form-text">Between 6-12 Characters.</div>
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror" name="password_confirmation" value="{{ old('password_confirmation') }}">
+                        <label for="exampleInputEmail1" class="form-label">Confirm Password <span
+                                style="color:red;">*</span></label>
+                        <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror"
+                            name="password_confirmation" value="{{ old('password_confirmation') }}">
                         <span style="color:red;">
                             @error('password_confirmation')
                                 {{ $message }}
@@ -72,12 +79,12 @@
     </div>
 @endsection
 @push('script')
-<script>
-    $(document).ready(function() {
-        $('#role').select2({
-            theme: "bootstrap-5",
-            width: '100%'
+    <script>
+        $(document).ready(function() {
+            $('#role').select2({
+                theme: "bootstrap-5",
+                width: '100%'
+            });
         });
-    });
-</script>
+    </script>
 @endpush

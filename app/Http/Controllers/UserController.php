@@ -34,13 +34,12 @@ class UserController extends Controller implements HasMiddleware
     }
 
     public function getData(Request $request){
-        $user = User::with('role')
-        ->where('id','!=',Auth::user()->id);
+        $user = User::with('role');
 
         return Datatables::of($user)
         ->addColumn('action', function ($row){
             $action = '';
-                if($row->role->is_super_admin != 1 && Gate::any(['UPDATE-USER','DELETE-USER'])){
+                if($row->role->is_super_admin != 1 && Gate::any(['UPDATE-USER','DELETE-USER']) && $row->id != Auth::id()){
                     $action .=
                     '<div class="dropdown">
                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -62,7 +61,7 @@ class UserController extends Controller implements HasMiddleware
             return $action;
         })
         ->editColumn('updated_at', function ($row){
-            return date('Y-m-d',strtotime($row->updated_at));
+            return date('Y-m-d H:i:s',strtotime($row->updated_at));
         })
         ->addColumn('role', function ($row){
             return $row->role->name;
@@ -92,7 +91,7 @@ class UserController extends Controller implements HasMiddleware
     {
         $request->validate([
             'name' => 'required|max:40',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:users,email,NULL,id,deleted_at,NULL',
             'role' => 'required',
             'password' => 'min:6|max:12|required_with:password_confirmation|same:password_confirmation',
             'password_confirmation' => 'min:6'
@@ -105,7 +104,7 @@ class UserController extends Controller implements HasMiddleware
         $user->role_id = $request->role;
         $user->save();
 
-        return redirect()->route('user.index')->with('success', 'Data Tersimpan');
+        return redirect()->route('user.index')->with('success', 'Data Saved');
     }
 
     /**
@@ -137,7 +136,7 @@ class UserController extends Controller implements HasMiddleware
     {
         $request->validate([
             'name' => 'required|max:40',
-            'email' => 'required|email|unique:users,email,'. $id,
+            'email' => 'required|email|unique:users,email,'.$id.',id,deleted_at,NULL',
             'role' => 'required',
         ]);
 
@@ -151,7 +150,7 @@ class UserController extends Controller implements HasMiddleware
         $user->email = $request->email;
         $user->save();
 
-        return redirect()->route('user.index')->with('success', 'Data Saved');
+        return redirect()->route('user.index')->with('success', 'Data Updated');
     }
 
     public function updatePassword(Request $request){
@@ -177,6 +176,6 @@ class UserController extends Controller implements HasMiddleware
             abort(403);
         } 
         $user->delete();
-        return response()->json(['success' => 'Data Terhapus']);
+        return response()->json(['success' => 'Data Deleted']);
     }
 }

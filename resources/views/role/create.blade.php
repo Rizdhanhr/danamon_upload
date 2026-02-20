@@ -14,7 +14,7 @@
                 <form method="POST" action="{{ route('role.store') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Name</label>
+                        <label for="exampleInputEmail1" class="form-label">Name <span style="color:red;">*</span></label>
                         <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
                             value="{{ old('name') }}">
                         <span style="color:red;">
@@ -24,7 +24,8 @@
                         </span>
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Description</label>
+                        <label for="exampleInputEmail1" class="form-label">Description <span
+                                style="color:red;">*</span></label>
                         <input type="text" class="form-control @error('description') is-invalid @enderror"
                             name="description" value="{{ old('description') }}">
                         <span style="color:red;">
