@@ -31,6 +31,7 @@
 @endsection
 @section('content')
     <div class="container-xl">
+
         <div class="card mb-4">
             {{-- <div class="card-header">
             <a type="button" href="{{ route('user.create') }}" class="btn btn-primary btn-sm">Tambah Data</a>
@@ -185,7 +186,7 @@
                     $('#password_confirmation').val('');
                     $('#btnSave').prop('disabled', false);
                     $('#staticBackdrop').modal('hide');
-                    alertSuccess(response.success);
+                    alertSuccess(response.message);
                 },
                 error: function(error) {
                     $('#btnSave').prop('disabled', false);
@@ -218,7 +219,7 @@
                         url: url,
                         type: 'DELETE',
                         success: function(result) {
-                            alertSuccess(result.success);
+                            alertSuccess(result.message);
                             table.ajax.reload();
                         },
                         error: function(error) {

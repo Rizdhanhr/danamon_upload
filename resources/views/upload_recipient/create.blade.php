@@ -7,9 +7,9 @@
 @section('content')
     <div class="container-xl">
         <div class="card mb-4">
-            {{-- <div class="card-header">
-            <a type="button" href="{{ route('user.create') }}" class="btn btn-primary btn-sm">Tambah Data</a>
-        </div> --}}
+            <div class="card-header">
+                <a type="button" href="{{ route('upload-recipient.download') }}" class="btn btn-primary">Download Template</a>
+            </div>
             <div class="card-body">
                 <form method="POST" action="{{ route('upload-recipient.store') }}" enctype="multipart/form-data">
                     @csrf

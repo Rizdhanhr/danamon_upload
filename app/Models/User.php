@@ -54,4 +54,15 @@ class User extends Authenticatable
     public function role(){
         return $this->belongsTo(Role::class);
     }
+
+
+    public function createdUploads()
+    {
+        return $this->hasMany(UploadRecipient::class, 'created_by');
+    }
+
+    public function approvedUploads()
+    {
+        return $this->hasMany(UploadRecipient::class, 'approved_by');
+    }
 }

@@ -130,7 +130,7 @@
                         url: url,
                         type: 'DELETE',
                         success: function(result) {
-                            alertSuccess(result.success);
+                            alertSuccess(result.message);
                             table.ajax.reload();
                         },
                         error: function(error) {

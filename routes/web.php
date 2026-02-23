@@ -32,8 +32,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user/update-password',[UserController::class,'updatePassword'])->name('user.password');
     Route::resource('/user',UserController::class);
 
-
-    Route::resource('/upload-recipient', UploadRecipientController::class);
     Route::post('/upload-recipient/data', [UploadRecipientController::class,'getData'])->name('upload-recipient.data');
+    Route::post('/upload-recipient/{id}/cancel', [UploadRecipientController::class,'cancel'])->name('upload-recipient.cancel');
+    Route::post('/upload-recipient/{id}/data', [UploadRecipientController::class,'getDetailData'])->name('upload-recipient.detail_data');
+    Route::post('/upload-recipient/{id}/approve', [UploadRecipientController::class,'approve'])->name('upload-recipient.approve');
+    Route::get('/upload-recipient/download', [UploadRecipientController::class,'download'])->name('upload-recipient.download');
+    Route::resource('/upload-recipient', UploadRecipientController::class)->only(['index','show','store','create']);
+  
 });
 

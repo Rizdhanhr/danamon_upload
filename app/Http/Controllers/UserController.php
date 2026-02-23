@@ -163,7 +163,7 @@ class UserController extends Controller implements HasMiddleware
         $user->password = Hash::make($request->password);
         $user->save();
 
-        return response()->json(['success' => 'Data Tersimpan']);
+        return response()->json(['message' => 'Data Tersimpan']);
     }
 
     /**
@@ -176,6 +176,6 @@ class UserController extends Controller implements HasMiddleware
             abort(403);
         } 
         $user->delete();
-        return response()->json(['success' => 'Data Deleted']);
+        return response()->json(['message' => 'Data Deleted']);
     }
 }

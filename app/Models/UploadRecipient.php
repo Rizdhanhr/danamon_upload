@@ -20,4 +20,15 @@ class UploadRecipient extends Model
             $model->updated_by = Auth::id();
         });
     }   
+
+     public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    
+    public function approver()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
 }

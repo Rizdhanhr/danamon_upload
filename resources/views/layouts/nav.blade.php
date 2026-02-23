@@ -48,15 +48,18 @@
                             </span>
                         </a>
                     </li>
-                    <li class="nav-item {{ request()->routeIs('upload-recipient.*') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('upload-recipient.index') }}">
-                            <i class="bi bi-upload"></i>
-                            &nbsp;
-                            <span class="nav-link-title">
-                                Upload Recipient
-                            </span>
-                        </a>
-                    </li>
+                    @can('VIEW-UPLOAD-RECIPIENT')
+                        <li class="nav-item {{ request()->routeIs('upload-recipient.*') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('upload-recipient.index') }}">
+                                <i class="bi bi-upload"></i>
+                                &nbsp;
+                                <span class="nav-link-title">
+                                    Upload Recipient
+                                </span>
+                            </a>
+                        </li>
+                    @endcan
+
                     @canany(['VIEW-ROLE', 'VIEW-USER'])
                         <li class="nav-item dropdown  {{ request()->routeIs(['user.*', 'role.*']) ? 'active' : '' }}">
                             <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"

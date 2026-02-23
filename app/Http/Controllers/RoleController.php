@@ -212,6 +212,6 @@ class RoleController extends Controller implements HasMiddleware
 
         $role->delete();
 
-        return response()->json(['success' => 'Data Deleted'],200);
+        return response()->json(['message' => 'Data Deleted'],200);
     }
 }
