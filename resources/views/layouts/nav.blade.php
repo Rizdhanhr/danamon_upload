@@ -6,12 +6,11 @@
         </button>
         <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
             <a href=".">
-                <img src="{{ asset('template') }}/static/logo.svg" width="110" height="32" alt="Tabler"
+                <img src="{{ asset('template/images/logo_more_voucher.png') }}" width="110" height="32"
                     class="navbar-brand-image">
             </a>
         </h1>
         <div class="navbar-nav flex-row order-md-last">
-
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown"
                     aria-label="Open user menu">

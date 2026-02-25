@@ -1,130 +1,208 @@
 @extends('layouts.main')
-@section('title','Dashboard')
-@section('page_title','Dashboard')
+@section('title', 'Dashboard')
+@section('page_title', 'Dashboard')
 @section('content')
-<div class="container-xl">
-    <div class="row row-deck row-cards">
-      <div class="col-sm-6 col-lg-3">
-        <div class="card">
-          <div class="card-body">
-            <div class="d-flex align-items-center">
-              <div class="subheader">Sales</div>
-              <div class="ms-auto lh-1">
-                <div class="dropdown">
-                  <a class="dropdown-toggle text-muted" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Last 7 days</a>
-                  <div class="dropdown-menu dropdown-menu-end">
-                    <a class="dropdown-item active" href="#">Last 7 days</a>
-                    <a class="dropdown-item" href="#">Last 30 days</a>
-                    <a class="dropdown-item" href="#">Last 3 months</a>
-                  </div>
-                </div>
-              </div>
+
+    <div class="container-xl">
+        <div class="d-flex">
+            <h3 class="card-title">Summary ({{ date('M Y') }})</h3>
+            <div class="ms-auto">
+
             </div>
-            <div class="h1 mb-3">75%</div>
-            <div class="d-flex mb-2">
-              <div>Conversion rate</div>
-              <div class="ms-auto">
-                <span class="text-green d-inline-flex align-items-center lh-1">
-                  7% <!-- Download SVG icon from http://tabler-icons.io/i/trending-up -->
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l6 -6l4 4l8 -8" /><path d="M14 7l7 0l0 7" /></svg>
-                </span>
-              </div>
-            </div>
-            <div class="progress progress-sm">
-              <div class="progress-bar bg-primary" style="width: 75%" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" aria-label="75% Complete">
-                <span class="visually-hidden">75% Complete</span>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
-      <div class="col-sm-6 col-lg-3">
-        <div class="card">
-          <div class="card-body">
-            <div class="d-flex align-items-center">
-              <div class="subheader">Revenue</div>
-              <div class="ms-auto lh-1">
-                <div class="dropdown">
-                  <a class="dropdown-toggle text-muted" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Last 7 days</a>
-                  <div class="dropdown-menu dropdown-menu-end">
-                    <a class="dropdown-item active" href="#">Last 7 days</a>
-                    <a class="dropdown-item" href="#">Last 30 days</a>
-                    <a class="dropdown-item" href="#">Last 3 months</a>
-                  </div>
+        <div class="row row-cards">
+            <div class="col-sm-6 col-lg-4">
+                <div class="card card-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <span
+                                    class="bg-success text-white avatar"><!-- Download SVG icon from http://tabler-icons.io/i/currency-dollar -->
+                                    <i class="bi bi-stack"></i>
+                                </span>
+                            </div>
+                            <div class="col">
+                                <div class="font-weight-medium">
+                                    <strong>Total Completed Batch</strong>
+                                </div>
+                                <div class="text-muted">
+                                    {{ $total_batch }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-            <div class="d-flex align-items-baseline">
-              <div class="h1 mb-0 me-2">$4,300</div>
-              <div class="me-auto">
-                <span class="text-green d-inline-flex align-items-center lh-1">
-                  8% <!-- Download SVG icon from http://tabler-icons.io/i/trending-up -->
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l6 -6l4 4l8 -8" /><path d="M14 7l7 0l0 7" /></svg>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div id="chart-revenue-bg" class="chart-sm"></div>
-        </div>
-      </div>
-      <div class="col-sm-6 col-lg-3">
-        <div class="card">
-          <div class="card-body">
-            <div class="d-flex align-items-center">
-              <div class="subheader">New clients</div>
-              <div class="ms-auto lh-1">
-                <div class="dropdown">
-                  <a class="dropdown-toggle text-muted" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Last 7 days</a>
-                  <div class="dropdown-menu dropdown-menu-end">
-                    <a class="dropdown-item active" href="#">Last 7 days</a>
-                    <a class="dropdown-item" href="#">Last 30 days</a>
-                    <a class="dropdown-item" href="#">Last 3 months</a>
-                  </div>
+            <div class="col-sm-6 col-lg-4">
+                <div class="card card-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <span
+                                    class="bg-warning text-white avatar"><!-- Download SVG icon from http://tabler-icons.io/i/currency-dollar -->
+                                    <i class="bi bi-cash-stack"></i>
+                                </span>
+                            </div>
+                            <div class="col">
+                                <div class="font-weight-medium">
+                                    <strong>Total Completed Amount</strong>
+                                </div>
+                                <div class="text-muted">
+                                    Rp {{ number_format($total_amount, 0, ',', '.') }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-            <div class="d-flex align-items-baseline">
-              <div class="h1 mb-3 me-2">6,782</div>
-              <div class="me-auto">
-                <span class="text-yellow d-inline-flex align-items-center lh-1">
-                  0% <!-- Download SVG icon from http://tabler-icons.io/i/minus -->
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /></svg>
-                </span>
-              </div>
-            </div>
-            <div id="chart-new-clients" class="chart-sm"></div>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-6 col-lg-3">
-        <div class="card">
-          <div class="card-body">
-            <div class="d-flex align-items-center">
-              <div class="subheader">Active users</div>
-              <div class="ms-auto lh-1">
-                <div class="dropdown">
-                  <a class="dropdown-toggle text-muted" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Last 7 days</a>
-                  <div class="dropdown-menu dropdown-menu-end">
-                    <a class="dropdown-item active" href="#">Last 7 days</a>
-                    <a class="dropdown-item" href="#">Last 30 days</a>
-                    <a class="dropdown-item" href="#">Last 3 months</a>
-                  </div>
+            <div class="col-sm-6 col-lg-4">
+                <div class="card card-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <span
+                                    class="bg-primary text-white avatar"><!-- Download SVG icon from http://tabler-icons.io/i/currency-dollar -->
+                                    <i class="bi bi-people"></i>
+                                </span>
+                            </div>
+                            <div class="col">
+                                <div class="font-weight-medium">
+                                    <strong>Total Completed Recipient</strong>
+                                </div>
+                                <div class="text-muted">
+                                    {{ $total_recipient }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-            <div class="d-flex align-items-baseline">
-              <div class="h1 mb-3 me-2">2,986</div>
-              <div class="me-auto">
-                <span class="text-green d-inline-flex align-items-center lh-1">
-                  4% <!-- Download SVG icon from http://tabler-icons.io/i/trending-up -->
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l6 -6l4 4l8 -8" /><path d="M14 7l7 0l0 7" /></svg>
-                </span>
-              </div>
-            </div>
-            <div id="chart-active-users" class="chart-sm"></div>
-          </div>
         </div>
-      </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <h3 class="card-title">Total Batch</h3>
+                            <div class="ms-auto">
+                                <div class="dropdown">
+                                    <a id="dropdownToggle" class="dropdown-toggle text-muted" data-bs-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">Nominal IDR</a>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <a class="dropdown-item active" onclick="setActive(this,'idr')">Total Nominal
+                                            IDR</a>
+                                        <a class="dropdown-item" onclick="setActive(this,'qty')">Total Recipient</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div id="chart-social-referrals"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
-  </div>
 @endsection
+@push('script')
+    <script>
+        var tipe = 'idr';
+        var chart = null;
+
+        // tetap nama sama
+        function setActive(element, type) {
+            tipe = type;
+            $('.dropdown-item.active').removeClass('active');
+            $(element).addClass('active');
+            $('#dropdownToggle').text($(element).text());
+            getData(tipe);
+        }
+
+
+        $(document).ready(function() {
+            chart = new ApexCharts($('#chart-social-referrals')[0], {
+                chart: {
+                    type: "line",
+                    fontFamily: 'inherit',
+                    height: 288,
+                    parentHeightOffset: 0,
+                    toolbar: {
+                        show: false
+                    },
+                    animations: {
+                        enabled: false
+                    },
+                },
+                fill: {
+                    opacity: 1
+                },
+                stroke: {
+                    width: 2,
+                    lineCap: "round",
+                    curve: "smooth",
+                },
+                series: [],
+                grid: {
+                    padding: {
+                        top: -20,
+                        right: 0,
+                        left: -4,
+                        bottom: -4
+                    },
+                    strokeDashArray: 4,
+                    xaxis: {
+                        lines: {
+                            show: true
+                        }
+                    },
+                },
+                colors: [tabler.getColor("facebook")],
+                legend: {
+                    show: true,
+                    position: 'bottom',
+                    offsetY: 12,
+                    markers: {
+                        width: 10,
+                        height: 10,
+                        radius: 100
+                    },
+                    itemMargin: {
+                        horizontal: 8,
+                        vertical: 8
+                    },
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function(value) {
+                            return value.toLocaleString('en-US');
+                        },
+                    },
+                },
+            });
+
+            chart.render();
+            getData(tipe);
+        });
+
+        // tetap nama sama
+        function getData(type) {
+            $.ajax({
+                method: "GET",
+                url: "{{ route('dashboard.data') }}",
+                data: {
+                    tipe: type
+                },
+                success: function(result) {
+                    chart.updateSeries([{
+                        name: 'Total',
+                        data: result.data
+                    }]);
+                }
+            });
+        }
+    </script>
+@endpush

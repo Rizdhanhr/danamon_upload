@@ -25,11 +25,24 @@ class UploadRecipientController extends Controller implements HasMiddleware
 
     public function index()
     {
-        return view('upload_recipient.index');
+        $start = date('Y-m-d',strtotime(Carbon::now()->subMonth(1)));
+        $end = date('Y-m-d');
+        return view('upload_recipient.index', compact('start','end'));
     }
 
     public function getData(Request $request){
-        $upload = UploadRecipient::query();
+
+        $start = $request->start; // 00:00:00
+        $end   = $request->end; 
+
+        $status = $request->status;
+            
+        
+        $upload = UploadRecipient::whereDate('created_at','>=', $start)
+        ->whereDate('created_at','<=', $end)
+        ->when($status != 'All', function($query) use ($status){
+            return $query->where('status', $status);
+        });
 
         return Datatables::of($upload)
         ->addColumn('action', function ($row){
@@ -106,6 +119,13 @@ class UploadRecipientController extends Controller implements HasMiddleware
        $filePath = public_path('template/excel/template.xlsx');
    
        return response()->download($filePath, 'template_upload_recipient.xlsx');
+    }
+    public function downloadOriginal($id){
+
+        $upload = UploadRecipient::findOrFail($id);
+        $filePath = public_path($upload->path);
+
+       return response()->download($filePath);
     }
 
     /**

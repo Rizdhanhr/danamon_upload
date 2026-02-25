@@ -27,10 +27,8 @@
                 <!-- Card -->
                 <table width="100%" cellpadding="0" cellspacing="0"
                     style="max-width:560px;background:#ffffff;border-radius:12px;padding:40px 40px;box-shadow:0 10px 25px rgba(0,0,0,0.08);">
-
                     <tr>
                         <td align="center">
-
                             <div style="font-size:22px;font-weight:600;color:#111827;margin-bottom:8px;">
                                 Hi, {{ $name }}
                             </div>
@@ -43,7 +41,7 @@
                             <!-- OTP -->
                             <div style="margin-bottom:28px;">
                                 <span
-                                    style="display:inline-block;background:#eef2ff;color:#4338ca;border-radius:10px;padding:16px 28px;font-size:34px;font-weight:700;letter-spacing:10px;">
+                                    style="display:inline-block;background:#FFFFFF;color:#030303;border-radius:10px;padding:16px 28px;font-size:34px;font-weight:700;letter-spacing:10px;">
                                     {{ $otp }}
                                 </span>
                             </div>

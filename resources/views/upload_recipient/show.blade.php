@@ -102,7 +102,7 @@
                                 <th>Original File</th>
                                 <td>
                                     @if ($upload->path)
-                                        <a href="{{ asset($upload->path) }}"
+                                        <a href="{{ route('upload-recipient.download_original', $upload->id) }}"
                                             class="btn btn-primary btn-sm rounded-pill px-4 shadow-sm fw-semibold"
                                             target="_blank">
                                             <i class="bi bi-download me-1"></i> Download File

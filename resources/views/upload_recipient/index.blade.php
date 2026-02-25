@@ -34,16 +34,17 @@
         <div class="row g-2 mb-3">
             <div class="col-md-2">
                 <label class="form-label" for="startDate">Start Date</label>
-                <input type="text" name="start" class="form-control text-center" id="startDate"
-                    placeholder="Start Date">
+                <input type="text" value="{{ $start }}" onchange="filterData()" name="start"
+                    class="form-control text-center" id="start" placeholder="Start Date">
             </div>
             <div class="col-md-2">
                 <label class="form-label" for="endDate">End Date</label>
-                <input type="text" name="end" class="form-control text-center" id="endDate" placeholder="End Date">
+                <input type="text" value="{{ $end }}" onchange="filterData()" name="end"
+                    class="form-control text-center" id="end" placeholder="End Date">
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label class="form-label" for="categoryFilter">Status</label>
-                <select class="form-select">
+                <select class="form-select" onchange="filterData()" id="status">
                     <option value="All" selected>All</option>
                     <option value="0">Uploading</option>
                     <option value="1">Waiting For Approval</option>
@@ -108,7 +109,7 @@
 @endsection
 @push('script')
     <script>
-        $('#startDate').daterangepicker({
+        $('#start').daterangepicker({
             singleDatePicker: true,
             timePicker: false,
             timePickerIncrement: 1,
@@ -121,7 +122,7 @@
             },
         });
 
-        $('#endDate').daterangepicker({
+        $('#end').daterangepicker({
             singleDatePicker: true,
             timePicker: false,
             timePickerIncrement: 1,
@@ -143,6 +144,11 @@
             ajax: {
                 url: "{{ route('upload-recipient.data') }}",
                 type: 'POST',
+                data: function(d) {
+                    d.start = $('#start').val();
+                    d.end = $('#end').val();
+                    d.status = $('#status').val();
+                }
             },
             columns: [{
                     data: 'name',
@@ -212,6 +218,10 @@
         function showExceptionModal(text) {
             $('#exceptionText').text(text || '');
             $('#exceptionModal').modal('show');
+        }
+
+        function filterData() {
+            table.ajax.reload();
         }
     </script>
 @endpush

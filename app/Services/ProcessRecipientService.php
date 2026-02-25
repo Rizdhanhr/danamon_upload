@@ -26,6 +26,7 @@ class ProcessRecipientService
             DB::beginTransaction();
                 $path = public_path($r->path);
                 Excel::import(new UploadRecipientImport($r->id), $path);
+                 Log::channel('cron')->info('sukses');
                 $totalRecipient = UploadRecipientDetail::where('upload_recipient_id', $r->id)->count();
                 $totalAmount = UploadRecipientDetail::where('upload_recipient_id', $r->id)->sum('amount');
                 $r->update([
@@ -33,6 +34,7 @@ class ProcessRecipientService
                     'total_recipient' => $totalRecipient,
                     'total_amount' => $totalAmount,
                 ]);
+               
             DB::commit();
         }catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             DB::rollback();
@@ -52,7 +54,7 @@ class ProcessRecipientService
             DB::rollback();
             $r->update([
                 'status' => -1,
-                'exception' => $message,
+                'exception' => $e->getMessage(),
             ]);
             throw $e;
         }

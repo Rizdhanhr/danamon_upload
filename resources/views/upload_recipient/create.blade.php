@@ -8,7 +8,11 @@
     <div class="container-xl">
         <div class="card mb-4">
             <div class="card-header">
-                <a type="button" href="{{ route('upload-recipient.download') }}" class="btn btn-primary">Download Template</a>
+                <a href="{{ route('upload-recipient.download', ['v' => time()]) }}"
+                    class="btn btn-primary btn-sm rounded-pill px-4 shadow-sm fw-semibold" target="_blank">
+                    <i class="bi bi-download me-1"></i> Download Template
+                </a>
+
             </div>
             <div class="card-body">
                 <form method="POST" action="{{ route('upload-recipient.store') }}" enctype="multipart/form-data">

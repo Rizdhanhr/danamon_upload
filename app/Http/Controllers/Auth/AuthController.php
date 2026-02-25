@@ -9,6 +9,11 @@ use App\Models\User;
 use Hash;
 use Auth;
 use Carbon\Carbon;
+use Google\Cloud\RecaptchaEnterprise\V1\Assessment;
+use Google\Cloud\RecaptchaEnterprise\V1\Client\RecaptchaEnterpriseServiceClient;
+use Google\Cloud\RecaptchaEnterprise\V1\CreateAssessmentRequest;
+use Google\Cloud\RecaptchaEnterprise\V1\Event;
+
 
 
 class AuthController extends Controller
@@ -55,6 +60,36 @@ class AuthController extends Controller
 
     public function verifyRecaptcha(Request $request){
         return response()->json(['message' => 'reCAPTCHA Success'], 200);
+        // $token = $request->token;
+        // $projectId = config('services.google_cloud.project_id');  // ganti dengan Project ID di Google Cloud
+        // $siteKey = config('services.google_cloud.site_key');
+        // $credPath = config('services.google_cloud.credentials_path');
+        // putenv("GOOGLE_APPLICATION_CREDENTIALS={$credPath}");
+        // $client = new RecaptchaEnterpriseServiceClient();
+
+        // try {
+        //     $event = (new Event())->setSiteKey($siteKey)->setToken($token);
+        //     $assessment = (new Assessment())->setEvent($event);
+
+        //     $requestObj = new CreateAssessmentRequest();
+        //     $requestObj->setParent($client->projectName($projectId));
+        //     $requestObj->setAssessment($assessment);        
+        //     $response = $client->createAssessment($requestObj);
+        //     $tokenProps = $response->getTokenProperties();
+        //     $score = $response->getRiskAnalysis()->getScore();
+          
+        //     if ($score < 0.5) {
+        //         throw new \Exception('Low score: '.$score);
+        //     }
+
+        //     return response()->json(['message' => 'reCAPTCHA Success'], 200);
+        // } catch (\Exception $e) {
+        //     return response()->json(['error_message' => 'reCAPTCHA validation failed. Please try again.'], 403);
+        // } finally {
+        //     $client->close();
+        // }
+
+        // return response()->json(['message' => 'reCAPTCHA Success'], 200);
     }
 
     public function verifyOtp(Request $request){

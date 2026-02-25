@@ -22,7 +22,9 @@ Route::middleware(['guest'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::post('/logout',[AuthController::class,'logout'])->name('logout');
     Route::get('/',[DashboardController::class,'index'])->name('dashboard.index');
+    Route::get('/data',[DashboardController::class,'getData'])->name('dashboard.data');
 
+    
     //Access Management
     //Role
     Route::post('/role/data',[RoleController::class,'getData'])->name('role.data');
@@ -37,6 +39,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/upload-recipient/{id}/data', [UploadRecipientController::class,'getDetailData'])->name('upload-recipient.detail_data');
     Route::post('/upload-recipient/{id}/approve', [UploadRecipientController::class,'approve'])->name('upload-recipient.approve');
     Route::get('/upload-recipient/download', [UploadRecipientController::class,'download'])->name('upload-recipient.download');
+     Route::get('/upload-recipient/download{id}', [UploadRecipientController::class,'downloadOriginal'])->name('upload-recipient.download_original');
+    
+   
     Route::resource('/upload-recipient', UploadRecipientController::class)->only(['index','show','store','create']);
   
 });

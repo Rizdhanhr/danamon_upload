@@ -9,6 +9,8 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithValidation;
+
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Log;
 
 class UploadRecipient implements 
@@ -17,7 +19,8 @@ class UploadRecipient implements
     WithChunkReading,
     WithBatchInserts,
     SkipsEmptyRows,
-    WithValidation
+    WithValidation,
+    WithMultipleSheets
 {
     protected $batchId;
 
@@ -26,9 +29,20 @@ class UploadRecipient implements
         $this->batchId = $batchId;
     }
 
+        public function sheets(): array
+    {
+        return [
+            'Sheet1' => $this,
+        ];
+    }
+
+
     public function model(array $row)
     {
-        Log::channel('cron')->info('HEADER KEYS', array_keys($row));
+     
+//   Log::channel('cron')->info('mobile_num value', [$row['mobile_num'] ?? 'KEY NOT FOUND']);
+// Log::channel('cron')->info('mobile_num exists', [array_key_exists('mobile_num', $row)]);
+
         return new UploadRecipientDetail([
             'upload_recipient_id' => $this->batchId,
             'phone'        => $this->normalizeIndoPhone($row['mobile_num'] ?? null),
