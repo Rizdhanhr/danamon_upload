@@ -118,9 +118,15 @@
             </div>
         </div>
         <div class="card mb-4">
-            {{-- <div class="card-header">
-            <a type="button" href="{{ route('user.create') }}" class="btn btn-primary btn-sm">Tambah Data</a>
-        </div> --}}
+            @if ($upload->status > 2)
+                <div class="card-header">
+
+                    <a href="{{ route('upload-recipient.export', $upload->id) }}"
+                        class="btn btn-primary btn-sm rounded-pill px-4 shadow-sm fw-semibold">
+                        <i class="bi bi-download me-1"></i> Download Report
+                    </a>
+                </div>
+            @endif
             <div class="card-body">
                 <div class="table-responsive">
                     <table id="example" class="table table-striped table-bordered" style="width:100%">
@@ -128,11 +134,15 @@
                             <tr>
                                 <th>Name</th>
                                 <th width="15%">Mobile Num</th>
-                                <th width="12%">Pol Num</th>
-                                <th width="10%">Bank Br Code</th>
-                                <th width="10%">Bank Name</th>
                                 <th width="15%">Product</th>
+                                <th width="15%">Bank Name</th>
+                                <th width="10%">Bank Account</th>
                                 <th width="17%">Amount</th>
+                                <th width="13%">Status</th>
+                                {{-- <th width="12%">Pol Num</th> --}}
+
+
+
                             </tr>
                         </thead>
                         <tbody>
@@ -189,24 +199,28 @@
                     name: 'phone'
                 },
                 {
-                    data: 'pol_num',
-                    name: 'pol_num'
+                    data: 'product_name',
+                    name: 'product_name'
                 },
-                {
-                    data: 'bank_br_code',
-                    name: 'bank_br_code'
-                },
+
                 {
                     data: 'bank_name',
                     name: 'bank_name'
                 },
+
                 {
-                    data: 'product_name',
-                    name: 'product_name'
+                    data: 'bank_account',
+                    name: 'bank_account'
                 },
                 {
                     data: 'amount',
                     name: 'amount'
+                },
+                {
+                    data: 'status',
+                    name: 'staus',
+                    className: "text-center",
+                    searchable: false,
                 },
             ],
         });

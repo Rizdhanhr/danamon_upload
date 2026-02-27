@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use DataTables;
+use Excel;
 use App\Models\UploadRecipient;
 use App\Models\UploadRecipientDetail;
+use App\Exports\RecipientDetail as RecipientDetailExport;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -102,7 +104,21 @@ class UploadRecipientController extends Controller implements HasMiddleware
         ->editColumn('amount', function ($row) {
             return 'Rp ' . number_format($row->amount, 0, ',', '.');
         })
-        ->rawColumns(['amount'])
+        ->editColumn('status', function ($row){
+            $status = '';
+            if($row->status == 0){
+                $status = '<span class="badge bg-warning">Pending</span>';
+            }elseif($row->status == 1){
+                $status = '<span class="badge bg-secondary">On Process</span>';
+            }elseif($row->status == 2){
+                $status = '<span class="badge bg-success">Success</span>';
+            }elseif($row->status < 0){
+                $status = '<span class="badge bg-danger">Failed</span>';
+            }   
+
+            return $status;
+        })
+        ->rawColumns(['amount','status'])
         ->make(true);
     }
 
@@ -126,6 +142,17 @@ class UploadRecipientController extends Controller implements HasMiddleware
         $filePath = public_path($upload->path);
 
        return response()->download($filePath);
+    }
+
+    public function export($id){
+        $upload = UploadRecipient::where('status',3)->findOrFail($id);
+        $filename = "recipient_detail.xlsx";
+        return Excel::download(
+            new RecipientDetailExport($upload->id),
+            $filename
+        );
+
+        
     }
 
     /**

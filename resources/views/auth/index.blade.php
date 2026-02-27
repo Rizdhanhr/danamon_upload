@@ -42,7 +42,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="exampleInputOtp" class="form-label">One Time Password (OTP)</label>
-                            <input type="text" name="otp" class="form-control validate" id="otp">
+                            <input type="text" oninput="validateOtp(this)" inputmode="numeric" pattern="[0-9]*"
+                                maxlength="6" name="otp" class="form-control validate" id="otp">
                             <span class="validation formErrors-otp" style="color: red;"></span>
                         </div>
                         <div class="mb-3">
@@ -78,6 +79,14 @@
         var timer = null;
         var cooldown = true;
         var icons = '<i class="bi bi-exclamation-circle-fill"></i>';
+
+
+
+        function validateOtp(el) {
+            let val = $(el).val();
+            val = val.replace(/\D/g, '');
+            $(el).val(val);
+        }
 
         function countDownTime() {
             spn.text(count);
