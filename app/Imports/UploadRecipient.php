@@ -10,7 +10,7 @@ use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithValidation;
 
-use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+// use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Log;
 
 class UploadRecipient implements 
@@ -19,8 +19,8 @@ class UploadRecipient implements
     WithChunkReading,
     WithBatchInserts,
     SkipsEmptyRows,
-    WithValidation,
-    WithMultipleSheets
+    WithValidation
+    // WithMultipleSheets
 {
     protected $batchId;
 
@@ -29,12 +29,12 @@ class UploadRecipient implements
         $this->batchId = $batchId;
     }
 
-        public function sheets(): array
-    {
-        return [
-            'Sheet1' => $this,
-        ];
-    }
+    //     public function sheets(): array
+    // {
+    //     return [
+    //         'Sheet1' => $this,
+    //     ];
+    // }
 
 
     public function model(array $row)
@@ -90,7 +90,6 @@ class UploadRecipient implements
         return [
             '*.mobile_num.required' => 'MOBILE_NUM is required',
             '*.pol_num_optional.required' => 'POL_NUM is required',
-
             '*.bank_account.required' => 'BANK_ACCOUNT is required',
             '*.bank_account.digits_between' => 'BANK_ACCOUNT must be 8–25 digits',
 

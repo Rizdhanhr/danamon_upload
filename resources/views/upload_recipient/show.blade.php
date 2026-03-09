@@ -134,9 +134,9 @@
                             <tr>
                                 <th>Name</th>
                                 <th width="15%">Mobile Num</th>
-                                <th width="15%">Product</th>
-                                <th width="15%">Bank Name</th>
-                                <th width="10%">Bank Account</th>
+                                <th width="20%">Product</th>
+                                {{-- <th width="15%">Bank Name</th> --}}
+                                <th width="15%">Bank Account</th>
                                 <th width="17%">Amount</th>
                                 <th width="13%">Status</th>
                                 {{-- <th width="12%">Pol Num</th> --}}
@@ -202,12 +202,6 @@
                     data: 'product_name',
                     name: 'product_name'
                 },
-
-                {
-                    data: 'bank_name',
-                    name: 'bank_name'
-                },
-
                 {
                     data: 'bank_account',
                     name: 'bank_account'

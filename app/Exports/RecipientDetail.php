@@ -49,7 +49,7 @@ class RecipientDetail implements FromQuery,
                     ELSE 'Unknown'
                 END as STATUS
             "),
-            'serial_number   as SERIAL_NUMBER',
+            'serial_number  as SERIAL_NUMBER',
         ]);
     }
 
