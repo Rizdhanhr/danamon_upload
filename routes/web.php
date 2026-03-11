@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UploadRecipientController;
+use App\Http\Controllers\ProfileController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -24,6 +25,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/',[DashboardController::class,'index'])->name('dashboard.index');
     Route::get('/data',[DashboardController::class,'getData'])->name('dashboard.data');
 
+
+    Route::get('/profile',[ProfileController::class,'index'])->name('profile.index');
     
     //Access Management
     //Role

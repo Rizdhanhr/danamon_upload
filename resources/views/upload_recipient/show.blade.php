@@ -29,7 +29,11 @@
                             </tr>
                             <tr>
                                 <th>Notes</th>
-                                <td>{{ $upload->notes }}</td>
+                                <td>{{ $upload->notes ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Template SMS</th>
+                                <td>{{ $upload->template ?? '-' }}</td>
                             </tr>
 
                             <tr>
@@ -120,7 +124,6 @@
         <div class="card mb-4">
             @if ($upload->status > 2)
                 <div class="card-header">
-
                     <a href="{{ route('upload-recipient.export', $upload->id) }}"
                         class="btn btn-primary btn-sm rounded-pill px-4 shadow-sm fw-semibold">
                         <i class="bi bi-download me-1"></i> Download Report
@@ -128,6 +131,59 @@
                 </div>
             @endif
             <div class="card-body">
+                <div class="row mb-4">
+
+                    <div class="col-md-4">
+                        <div class="card border-warning shadow-sm">
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                <div>
+                                    <small class="text-muted">Total Amount Pending</small>
+                                    <h4 class="mb-0 fw-bold">Rp. {{ number_format($summary->pending_amount, 0, ',', '.') }}
+                                    </h4>
+                                    <small class="text-muted">
+                                        {{ $summary->pending_count }} recipient
+                                    </small>
+                                </div>
+                                <i class="bi bi-hourglass-split fs-2 text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card border-success shadow-sm">
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                <div>
+                                    <small class="text-muted">Total Amount Sent</small>
+                                    <h4 class="mb-0 fw-bold">Rp. {{ number_format($summary->sent_amount, 0, ',', '.') }}
+                                    </h4>
+                                    <small class="text-muted">
+                                        {{ $summary->sent_count }} recipient
+                                    </small>
+                                </div>
+                                <i class="bi bi-check-circle fs-2 text-success"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card border-danger shadow-sm">
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                <div>
+                                    <small class="text-muted">Total Amount Failed</small>
+                                    <h4 class="mb-0 fw-bold">Rp. {{ number_format($summary->failed_amount, 0, ',', '.') }}
+                                    </h4>
+                                    <small class="text-muted">
+                                        {{ $summary->failed_count }} recipient
+                                    </small>
+                                </div>
+                                <i class="bi bi-x-circle fs-2 text-danger"></i>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
                 <div class="table-responsive">
                     <table id="example" class="table table-striped table-bordered" style="width:100%">
                         <thead>
@@ -140,9 +196,6 @@
                                 <th width="17%">Amount</th>
                                 <th width="13%">Status</th>
                                 {{-- <th width="12%">Pol Num</th> --}}
-
-
-
                             </tr>
                         </thead>
                         <tbody>
@@ -165,6 +218,24 @@
                 </div>
                 <div class="modal-body">
                     <div id="exceptionText"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="failedModal" tabindex="-1">
+        <div class="modal-dialog  modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Recipient Failed</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="failedText"></div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -268,6 +339,11 @@
         function showExceptionModal(text) {
             $('#exceptionText').text(text || '');
             $('#exceptionModal').modal('show');
+        }
+
+        function showFailedModal(text) {
+            $('#failedText').text(text || '');
+            $('#failedModal').modal('show');
         }
     </script>
 @endpush

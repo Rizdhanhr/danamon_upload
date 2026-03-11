@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithValidation;
 
+
 // use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Log;
 
@@ -20,6 +21,7 @@ class UploadRecipient implements
     WithBatchInserts,
     SkipsEmptyRows,
     WithValidation
+    
     // WithMultipleSheets
 {
     protected $batchId;
@@ -29,27 +31,21 @@ class UploadRecipient implements
         $this->batchId = $batchId;
     }
 
-    //     public function sheets(): array
-    // {
-    //     return [
-    //         'Sheet1' => $this,
-    //     ];
-    // }
 
+    public function headingRow(): int
+    {
+        return 2;
+    }
 
     public function model(array $row)
     {
-     
-//   Log::channel('cron')->info('mobile_num value', [$row['mobile_num'] ?? 'KEY NOT FOUND']);
-// Log::channel('cron')->info('mobile_num exists', [array_key_exists('mobile_num', $row)]);
-
+        // Log::channel('cron')->info('Import row', $row);
         return new UploadRecipientDetail([
             'upload_recipient_id' => $this->batchId,
             'phone'        => $this->normalizeIndoPhone($row['mobile_num'] ?? null),
-            'pol_num'      => $row['pol_num'] ?? null,
+            'pol_num'      => $row['pol_num_optional'] ?? null,
             'bank_br_code' => $row['bank_br_code_optional'] ?? null,
             'product_name' => $row['product_name_optional'] ?? null,
-            'bank_name'    => $row['bank_name'] ?? null,
             'bank_account' => $row['bank_account'] ?? null,
             'name'         => $row['full_name'] ?? null,
             'amount'       => $row['nominal'] ?? null,
@@ -67,7 +63,6 @@ class UploadRecipient implements
             '*.nominal' => ['required','integer','min:1'],
             '*.bank_br_code_optional' => ['nullable','max:200'],
             '*.product_name_optional' => ['nullable','max:200'],
-            '*.bank_name' => ['required','max:200'],
         ];
     }
 
@@ -78,7 +73,6 @@ class UploadRecipient implements
             'pol_num_optional' => 'POL_NUM',
             'bank_br_code_optional' => 'BANK_BR_CODE',
             'product_name_optional' => 'PRODUCT_NAME',
-            'bank_name' => 'BANK_NAME',
             'bank_account' => 'BANK_ACCOUNT',
             'full_name' => 'FULL_NAME',
             'nominal' => 'NOMINAL',

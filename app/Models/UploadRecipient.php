@@ -10,7 +10,7 @@ class UploadRecipient extends Model
     protected $table = 'upload_recipient';
     protected $fillable = [
         'path', 'total_recipient','total_amount','name','notes','status','exception','created_at','updated_at','scheduled_at','approved_at',
-        'created_by','approved_by'
+        'created_by','approved_by','template'
     ];
 
     protected static function booted()

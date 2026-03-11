@@ -111,9 +111,11 @@ class UploadRecipientController extends Controller implements HasMiddleware
             }elseif($row->status == 1){
                 $status = '<span class="badge bg-secondary">On Process</span>';
             }elseif($row->status == 2){
-                $status = '<span class="badge bg-success">Success</span>';
+                $status = '<span class="badge bg-secondary">On Process</span>';
+            }elseif($row->status == 3){
+                $status = '<span class="badge bg-success">Sent</span>';
             }elseif($row->status < 0){
-                $status = '<span class="badge bg-danger">Failed</span>';
+                $status = '<span class="badge bg-danger" onclick="showFailedModal(`'.e($row->serial_number).'`)">Failed</span>';
             }   
 
             return $status;
@@ -215,8 +217,17 @@ class UploadRecipientController extends Controller implements HasMiddleware
     public function show(string $id)
     {
         $upload = UploadRecipient::with(['approver','creator'])->findOrFail($id);
-
-        return view('upload_recipient.show', compact('upload'));
+        $summary = UploadRecipientDetail::where('upload_recipient_id', $id)
+        ->selectRaw("
+            SUM(CASE WHEN status IN (0,1,2) THEN amount ELSE 0 END) as pending_amount,
+            SUM(CASE WHEN status = 3 THEN amount ELSE 0 END) as sent_amount,
+            SUM(CASE WHEN status < 0 THEN amount ELSE 0 END) as failed_amount,
+            COUNT(CASE WHEN status IN (0,1,2) THEN 1 END) as pending_count,
+            COUNT(CASE WHEN status = 3 THEN 1 END) as sent_count,
+            COUNT(CASE WHEN status < 0 THEN 1 END) as failed_count
+        ")
+        ->first();
+        return view('upload_recipient.show', compact('upload','summary'));
     }
 
     public function approve(Request $request, $id){

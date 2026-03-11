@@ -22,7 +22,7 @@
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <a href="./settings.html" class="dropdown-item">Settings</a>
+                    <a href="{{ route('profile.index') }}" class="dropdown-item">Profile</a>
                     <a href="" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                         class="dropdown-item">Logout</a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST">

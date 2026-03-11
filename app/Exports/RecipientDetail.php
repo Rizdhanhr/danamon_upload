@@ -33,19 +33,19 @@ class RecipientDetail implements FromQuery,
         ->where('upload_recipient_id', $this->uploadId)
         ->select([
             'phone      as MOBILE_NUM',
-            'pol_num         as POL_NUM',
-            'bank_br_code    as BANK_BR_CODE',
-            'product_name    as PRODUCT_NAME',
-            'bank_name       as BANK_NAME',
             'bank_account    as BANK_ACCOUNT',
             'name       as FULL_NAME',
             'amount         as NOMINAL',
+            'pol_num         as POL_NUM',
+            'bank_br_code    as BANK_BR_CODE',
+            'product_name    as PRODUCT_NAME',
             DB::raw("
                 CASE 
                     WHEN status < 0 THEN 'Failed'
                     WHEN status = 0 THEN 'Pending'
                     WHEN status = 1 THEN 'On Process'
-                    WHEN status = 2 THEN 'Success'
+                    WHEN status = 2 THEN 'On Process'
+                    WHEN status = 3 THEN 'Sent'
                     ELSE 'Unknown'
                 END as STATUS
             "),
@@ -57,14 +57,13 @@ class RecipientDetail implements FromQuery,
     public function headings(): array
     {
         return [
-            'MOBILE_NUM',
-            'POL_NUM',
-            'BANK_BR_CODE',
-            'PRODUCT_NAME',
-            'BANK_NAME',
+            'MOBILE_NUM', 
             'BANK_ACCOUNT',
             'FULL_NAME',
             'NOMINAL',
+            'POL_NUM',
+            'BANK_BR_CODE',
+            'PRODUCT_NAME',
             'STATUS',
             'SERIAL_NUMBER'
         ];
