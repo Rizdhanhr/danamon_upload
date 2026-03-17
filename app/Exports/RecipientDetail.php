@@ -32,9 +32,9 @@ class RecipientDetail implements FromQuery,
     return UploadRecipientDetail::query()
         ->where('upload_recipient_id', $this->uploadId)
         ->select([
-            'phone      as MOBILE_NUM',
             'bank_account    as BANK_ACCOUNT',
             'name       as FULL_NAME',
+            'phone      as MOBILE_NUM',
             'amount         as NOMINAL',
             'pol_num         as POL_NUM',
             'bank_br_code    as BANK_BR_CODE',
@@ -57,9 +57,9 @@ class RecipientDetail implements FromQuery,
     public function headings(): array
     {
         return [
-            'MOBILE_NUM', 
             'BANK_ACCOUNT',
             'FULL_NAME',
+            'MOBILE_NUM', 
             'NOMINAL',
             'POL_NUM',
             'BANK_BR_CODE',

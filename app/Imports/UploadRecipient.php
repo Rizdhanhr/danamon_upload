@@ -43,9 +43,9 @@ class UploadRecipient implements
         return new UploadRecipientDetail([
             'upload_recipient_id' => $this->batchId,
             'phone'        => $this->normalizeIndoPhone($row['mobile_num'] ?? null),
-            'pol_num'      => $row['pol_num_optional'] ?? null,
-            'bank_br_code' => $row['bank_br_code_optional'] ?? null,
-            'product_name' => $row['product_name_optional'] ?? null,
+            'pol_num'      => $row['pol_num'] ?? null,
+            'bank_br_code' => $row['bank_br_code'] ?? null,
+            'product_name' => $row['product_name'] ?? null,
             'bank_account' => $row['bank_account'] ?? null,
             'name'         => $row['full_name'] ?? null,
             'amount'       => $row['nominal'] ?? null,
@@ -57,12 +57,12 @@ class UploadRecipient implements
         return [
             '*.mobile_num' => ['required','string',
             'regex:/^(?:\+62|62|0)8[1-9][0-9]{6,10}$/'],
-            '*.pol_num_optional' => ['required'],
-            '*.bank_account' => ['required','digits_between:8,25'],
-            '*.full_name' => ['required','max:255'],
-            '*.nominal' => ['required','integer','min:1'],
-            '*.bank_br_code_optional' => ['nullable','max:200'],
-            '*.product_name_optional' => ['nullable','max:200'],
+            '*.pol_num' => ['nullable','max:225'],
+            '*.bank_account' => ['required','numeric','digits_between:6,25'],
+            '*.full_name' => ['required','max:225'],
+            '*.nominal' => ['required','integer','min:1','gt:1000'],
+            '*.bank_br_code' => ['nullable','max:225'],
+            '*.product_name' => ['nullable','max:225'],
         ];
     }
 
@@ -70,12 +70,12 @@ class UploadRecipient implements
     {
         return [
             'mobile_num' => 'MOBILE_NUM',
-            'pol_num_optional' => 'POL_NUM',
-            'bank_br_code_optional' => 'BANK_BR_CODE',
-            'product_name_optional' => 'PRODUCT_NAME',
+            'pol_num' => 'POL_NUM',
+            'bank_br_code' => 'BANK_BR_CODE',
+            'product_name' => 'PRODUCT_NAME',
             'bank_account' => 'BANK_ACCOUNT',
             'full_name' => 'FULL_NAME',
-            'nominal' => 'NOMINAL',
+            'nominal' => 'NOMINAL', 
         ];
     }
 
@@ -88,15 +88,15 @@ class UploadRecipient implements
             '*.bank_account.digits_between' => 'BANK_ACCOUNT must be 8–25 digits',
 
             '*.full_name.required' => 'FULL_NAME is required',
-            '*.full_name.max' => 'FULL_NAME may not exceed 255 characters',
+            '*.full_name.max' => 'FULL_NAME may not exceed 225 characters',
 
             '*.nominal.required' => 'NOMINAL is required',
             '*.nominal.integer' => 'NOMINAL must be a whole number',
             '*.nominal.min' => 'NOMINAL must be at least 1',
 
-            '*.bank_br_code_optional.max' => 'BANK_BR_CODE may not exceed 200 characters',
-            '*.product_name_optional.max' => 'PRODUCT_NAME may not exceed 200 characters',
-            '*.bank_name_optional.max' => 'BANK_NAME may not exceed 200 characters',
+            '*.bank_br_code.max' => 'BANK_BR_CODE may not exceed 225 characters',
+            '*.product_name.max' => 'PRODUCT_NAME may not exceed 225 characters',
+            '*.bank_name.max' => 'BANK_NAME may not exceed 225 characters',
         ];
     }
 

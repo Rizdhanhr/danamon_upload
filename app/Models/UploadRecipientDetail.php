@@ -10,4 +10,8 @@ class UploadRecipientDetail extends Model
     protected $fillable = [
         'upload_recipient_id', 'phone','bank_account','pol_num','name','created_at','updated_at','amount','bank_br_code','bank_name','status','product_name'
     ];
+
+    public function batch(){
+        return $this->belongsTo(UploadRecipient::class, 'upload_recipient_id');
+    }
 }

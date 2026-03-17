@@ -23,7 +23,7 @@
                             </div>
                             <div class="col">
                                 <div class="font-weight-medium">
-                                    <strong>Total Completed Batch</strong>
+                                    <strong>Total Processed Batch</strong>
                                 </div>
                                 <div class="text-muted">
                                     {{ $total_batch }}
@@ -45,7 +45,7 @@
                             </div>
                             <div class="col">
                                 <div class="font-weight-medium">
-                                    <strong>Total Completed Amount</strong>
+                                    <strong>Total Processed Amount</strong>
                                 </div>
                                 <div class="text-muted">
                                     Rp {{ number_format($total_amount, 0, ',', '.') }}
@@ -67,7 +67,7 @@
                             </div>
                             <div class="col">
                                 <div class="font-weight-medium">
-                                    <strong>Total Completed Recipient</strong>
+                                    <strong>Total Processed Recipient</strong>
                                 </div>
                                 <div class="text-muted">
                                     {{ $total_recipient }}

@@ -56,7 +56,7 @@ class ProcessRecipientService
                                     '~account',
                                     '~trxdate'
                                 ];
-
+                    
                                 foreach ($requiredParams as $param) {
                                     if (!str_contains($value, $param)) {
                                         $fail("SMS Text in B1 must required with {$param} parameter.");
