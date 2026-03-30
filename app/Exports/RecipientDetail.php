@@ -32,13 +32,19 @@ class RecipientDetail implements FromQuery,
     return UploadRecipientDetail::query()
         ->where('upload_recipient_id', $this->uploadId)
         ->select([
-            'bank_account    as BANK_ACCOUNT',
-            'name       as FULL_NAME',
             'phone      as MOBILE_NUM',
-            'amount         as NOMINAL',
+            'amount         as JUMLAH',
             'pol_num         as POL_NUM',
             'bank_br_code    as BANK_BR_CODE',
             'product_name    as PRODUCT_NAME',
+            'bank_account    as BANK_ACCOUNT',
+            'name       as FULL_NAME',
+            DB::raw("
+                CASE 
+                    WHEN valid_phone > 0 THEN 'Y'
+                    ELSE 'N'
+                END as VALID_PHONE
+            "),
             DB::raw("
                 CASE 
                     WHEN status < 0 THEN 'Failed'
@@ -49,7 +55,18 @@ class RecipientDetail implements FromQuery,
                     ELSE 'Unknown'
                 END as STATUS
             "),
-            'serial_number  as SERIAL_NUMBER',
+            DB::raw("
+                CASE 
+                    WHEN status < 0 THEN serial_number
+                    ELSE '-'
+                END as REMARK
+            "),
+            DB::raw("
+                CASE 
+                    WHEN valid_phone > 0 THEN dr_date
+                    ELSE '-'
+                END as SMS
+            "),
         ]);
     }
 
@@ -57,15 +74,17 @@ class RecipientDetail implements FromQuery,
     public function headings(): array
     {
         return [
-            'BANK_ACCOUNT',
-            'FULL_NAME',
             'MOBILE_NUM', 
-            'NOMINAL',
+            'JUMLAH',
             'POL_NUM',
             'BANK_BR_CODE',
             'PRODUCT_NAME',
+            'BANK_ACCOUNT',
+            'FULL_NAME',
+            'VALID_PHONE',
             'STATUS',
-            'SERIAL_NUMBER'
+            'REMARK',
+            'SMS'
         ];
     }
 
@@ -78,24 +97,27 @@ class RecipientDetail implements FromQuery,
 
     public function styles(Worksheet $sheet)
     {
-        return [
-            1 => [ // row header
-                'font' => [
-                    'bold' => true,
+       $sheet->getStyle('A1:K1')->applyFromArray([
+            'font' => [
+                'bold' => true,
+                'color' => ['rgb' => '000000'],
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
                     'color' => ['rgb' => '000000'],
                 ],
-                'fill' => [
-                    'fillType' => 'solid',
-                    'startColor' => ['rgb' => 'FFFF00'],
-                ],
-                'borders' => [
-                    'allBorders' => [
-                        'borderStyle' => Border::BORDER_THIN,
-                        'color' => ['rgb' => '000000'],
-                    ],
-                ],
             ],
-        ];
+        ]);
+
+        $sheet->getStyle('F1:G1')->applyFromArray([
+            'fill' => [
+                'fillType' => 'solid',
+                'startColor' => ['rgb' => 'FFFF00'],
+            ],
+        ]);
+
+        return [];
     }
 
     

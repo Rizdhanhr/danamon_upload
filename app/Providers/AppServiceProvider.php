@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
 
         //Super Admin
         Gate::before(function (User $user) {
-            return $user->role_id == 1 ? true : null;
+            return $user->role->is_super_admin? true : null;
         });
 
         //Gate Check

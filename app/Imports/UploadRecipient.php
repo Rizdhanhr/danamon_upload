@@ -48,19 +48,20 @@ class UploadRecipient implements
             'product_name' => $row['product_name'] ?? null,
             'bank_account' => $row['bank_account'] ?? null,
             'name'         => $row['full_name'] ?? null,
-            'amount'       => $row['nominal'] ?? null,
+            'amount'       => $row['jumlah'] ?? null,
         ]);
     }
 
     public function rules(): array
     {
         return [
-            '*.mobile_num' => ['required','string',
-            'regex:/^(?:\+62|62|0)8[1-9][0-9]{6,10}$/'],
+            // '*.mobile_num' => ['required','string',
+            // 'regex:/^(?:\+62|62|0)8[1-9][0-9]{6,10}$/'],
+            '*.mobile_num' => ['required', 'string', 'max:255', 'regex:/^[0-9+]+$/'],
             '*.pol_num' => ['nullable','max:225'],
             '*.bank_account' => ['required','numeric','digits_between:6,25'],
             '*.full_name' => ['required','max:225'],
-            '*.nominal' => ['required','integer','min:1','gt:1000'],
+            '*.jumlah' => ['required','integer','min:1','gt:1000'],
             '*.bank_br_code' => ['nullable','max:225'],
             '*.product_name' => ['nullable','max:225'],
         ];
@@ -75,7 +76,7 @@ class UploadRecipient implements
             'product_name' => 'PRODUCT_NAME',
             'bank_account' => 'BANK_ACCOUNT',
             'full_name' => 'FULL_NAME',
-            'nominal' => 'NOMINAL', 
+            'jumlah' => 'JUMLAH', 
         ];
     }
 
@@ -90,9 +91,9 @@ class UploadRecipient implements
             '*.full_name.required' => 'FULL_NAME is required',
             '*.full_name.max' => 'FULL_NAME may not exceed 225 characters',
 
-            '*.nominal.required' => 'NOMINAL is required',
-            '*.nominal.integer' => 'NOMINAL must be a whole number',
-            '*.nominal.min' => 'NOMINAL must be at least 1',
+            '*.jumlah.required' => 'JUMLAH is required',
+            '*.jumlah.integer' => 'JUMLAH must be a whole number',
+            '*.jumlah.min' => 'JUMLAH must be at least 1',
 
             '*.bank_br_code.max' => 'BANK_BR_CODE may not exceed 225 characters',
             '*.product_name.max' => 'PRODUCT_NAME may not exceed 225 characters',
