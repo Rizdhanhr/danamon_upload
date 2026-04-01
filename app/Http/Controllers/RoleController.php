@@ -41,7 +41,7 @@ class RoleController extends Controller implements HasMiddleware
         return Datatables::of($role)
         ->addColumn('action', function ($row){
             $action = '';
-                if($row->id != Auth::user()->role_id && $row->is_super_admin != 1 && Gate::any(['UPDATE-ROLE','DELETE-ROLE'])){
+                if($row->id != Auth::user()->role_id && $row->is_system != 1 && Gate::any(['UPDATE-ROLE','DELETE-ROLE'])){
                     $action .=
                     '<div class="dropdown">
                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -136,7 +136,7 @@ class RoleController extends Controller implements HasMiddleware
     {
         
         $role = Role::with('permission')->findOrFail($id);
-        if($role->is_super_admin === 1 || $role->id === Auth::user()->role_id){
+        if($role->is_system === 1 || $role->id === Auth::user()->role_id){
             abort(403);
         }
 
@@ -171,7 +171,7 @@ class RoleController extends Controller implements HasMiddleware
         ]);
 
         $role = Role::findOrFail($id);
-        if($role->is_super_admin === 1 || $role->id === Auth::user()->role_id){
+        if($role->is_system === 1 || $role->id === Auth::user()->role_id){
             abort(403);
         }
         
@@ -200,7 +200,7 @@ class RoleController extends Controller implements HasMiddleware
     public function destroy(string $id)
     {
         $role = Role::findOrFail($id);
-        if($role->is_super_admin === 1 || $role->id === Auth::user()->role_id){
+        if($role->is_system === 1 || $role->id === Auth::user()->role_id){
             abort(403);
         }
 

@@ -40,11 +40,14 @@
                                     value="{{ strtoupper(Auth::user()->username) }}" readonly>
                             </div>
                         </div> --}}
-                        <div>
-                            <button data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn">
-                                Set new password
-                            </button>
-                        </div>
+                        @if (Auth::user()->provider == 'local')
+                            <div>
+
+                                <button data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn">
+                                    Set new password
+                                </button>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -61,26 +64,35 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="form-data">
+                    <form id="form-data" action="{{ route('profile.update') }}" method="POST">
                         @csrf
                         <div class="mb-3">
                             <label for="exampleInputPassword1" class="form-label">Password <span
                                     style="color:red;">*</span></label>
-                            <input id="password" type="password" class="form-control validate" name="password">
-                            <span class="validation formErrors-password" style="color: red;"></span>
+                            <input id="password" type="password"
+                                class="form-control @error('password') is-invalid @enderror" name="password">
+                            <span style="color: red;"> @error('password')
+                                    {{ $message }}
+                                @enderror
+                            </span>
+                            <div id="emailHelp" class="form-text">6-12 Characters.</div>
                         </div>
                         <div class="mb-3">
                             <label for="exampleInputPassword1" class="form-label">Confirm Password <span
                                     style="color:red;">*</span></label>
-                            <input id="password_confirmation" type="password" class="form-control validate"
+                            <input id="password_confirmation" type="password"
+                                class="form-control @error('password_confirmation') is-invalid @enderror"
                                 name="password_confirmation">
-                            <span class="validation formErrors-password_confirmation" style="color: red;"></span>
+                            <span style="color: red;"> @error('password_confirmation')
+                                    {{ $message }}
+                                @enderror
+                            </span>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="btnSubmit">Submit</button>
+                    <button type="submit" class="btn btn-primary" form="form-data" id="btnSubmit">Submit</button>
                 </div>
             </div>
         </div>
@@ -91,5 +103,11 @@
 
 @endsection
 @push('script')
-    <script></script>
+    <script>
+        $(document).ready(function() {
+            @if ($errors->any())
+                $('#staticBackdrop').modal('show');
+            @endif
+        });
+    </script>
 @endpush

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Log;
+use DB;
 
 class UploadRecipientController extends Controller implements HasMiddleware
 {
@@ -34,17 +35,17 @@ class UploadRecipientController extends Controller implements HasMiddleware
 
     public function getData(Request $request){
 
-        $start = $request->start; // 00:00:00
-        $end   = $request->end; 
-
+        $start = $request->start_date; 
+        $end   = $request->end_date; 
         $status = $request->status;
-            
+           
         
         $upload = UploadRecipient::whereDate('created_at','>=', $start)
         ->whereDate('created_at','<=', $end)
         ->when($status != 'All', function($query) use ($status){
             return $query->where('status', $status);
         });
+
 
         return Datatables::of($upload)
         ->addColumn('action', function ($row){
@@ -99,7 +100,11 @@ class UploadRecipientController extends Controller implements HasMiddleware
     }
 
     public function getDetailData(Request $request,$id){
-        $upload = UploadRecipientDetail::where('upload_recipient_id',$id);
+        $upload = UploadRecipientDetail::with('batch')
+        ->select('upload_recipient_detail.*')
+        ->where('upload_recipient_id',$id);
+
+
         return Datatables::of($upload)
         ->editColumn('amount', function ($row) {
             return 'Rp ' . number_format($row->amount, 0, ',', '.');
@@ -120,7 +125,19 @@ class UploadRecipientController extends Controller implements HasMiddleware
 
             return $status;
         })
-        ->rawColumns(['amount','status'])
+        ->editColumn('valid_phone', function ($row){
+            $status = '';
+            if($row->status > 0){
+                $status = '<span class="badge bg-success">Valid</span>';
+            }elseif($row->status == 0){
+                $status = '<span class="badge bg-warning">-</span>';
+            }else{
+                $status = '<span class="badge bg-danger">Invalid</span>';
+            }  
+
+            return $status;
+        })
+        ->rawColumns(['amount','status','valid_phone'])
         ->make(true);
     }
 
@@ -185,30 +202,42 @@ class UploadRecipientController extends Controller implements HasMiddleware
             ]
         ]);
 
+        try{
+            
+          
+            DB::beginTransaction();
 
-        $batch = UploadRecipient::create([
-            'name' => $request->name,
-            'scheduled_at' => Carbon::parse($request->schedule_date),
-            'notes' => $request->notes,
-        ]);
+            $file = $request->file('file');
+            $ext = $file->getClientOriginalExtension();
+            $originalName = $file->getClientOriginalName();
+
+            $batch = UploadRecipient::create([
+                'name' => $request->name,
+                'scheduled_at' => Carbon::parse($request->schedule_date),
+                'notes' => $request->notes,
+                'original_filename' => $originalName,
+            ]);
 
        
-        $file = $request->file('file');
-        $ext = $file->getClientOriginalExtension();
-        $filename = "batch_{$batch->id}.{$ext}";
-        $destination = public_path('uploads/recipient');
-        if (!file_exists($destination)) {
-            mkdir($destination, 0777, true);
+       
+            $filename = "batch_{$batch->id}.{$ext}";
+            $destination = public_path('uploads/recipient');
+            if (!file_exists($destination)) {
+                mkdir($destination, 0777, true);
+            }
+            $file->move($destination, $filename);
+            $batch->update([
+                'path' => "uploads/recipient/{$filename}"
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('upload-recipient.index')->with('success', 'Data Saved');
+        }catch(\Exception $e){
+            DB::rollback();
+            Log::info($e->getMessage());
+            return redirect()->back()->with('error', 'Failed to upload file. Please try again.');
         }
-        $file->move($destination, $filename);
-        $batch->update([
-            'path' => "uploads/recipient/{$filename}"
-        ]);
-
-        
-
-        return redirect()->route('upload-recipient.index')->with('success', 'Data Saved');
-
     }
 
     /**
@@ -231,24 +260,48 @@ class UploadRecipientController extends Controller implements HasMiddleware
     }
 
     public function approve(Request $request, $id){
-        $upload = UploadRecipient::where('status',1)->findOrFail($id);
-        $action = $request->status;
-       
-        if($action == 2){
-            $upload->update([
-                'status' => 2,
-                'approved_at' => Carbon::now(),
-                'approved_by' => auth()->user()->id
-            ]);
-            return response()->json(['message' => 'Batch Approved']);
-        }elseif($action == -2){
-            $upload->update([
-                'status' => -2,
-                'approved_at' => Carbon::now(),
-                'approved_by' => auth()->user()->id
-            ]);
-            return response()->json(['message' => 'Batch Rejected']);
+        try{
+
+            DB::beginTransaction();
+            $upload = UploadRecipient::where('status',1)->findOrFail($id);
+            $action = $request->status;
+            $message = '';
+        
+            if($action == 2){
+                $upload->update([
+                    'status' => 2,
+                    'approved_at' => Carbon::now(),
+                    'approved_by' => auth()->user()->id
+                ]);
+                $message = 'Batch Approved';
+               
+            }elseif($action == -2){
+                $upload->update([
+                    'status' => -2,
+                    'approved_at' => Carbon::now(),
+                    'approved_by' => auth()->user()->id
+                ]);
+
+                $upload->details()
+                ->update([
+                    'status' => -1,
+                    'serial_number' => 'Rejected'
+                ]);
+
+                $message = 'Batch Rejected';
+            }
+
+            DB::commit();
+
+            return response()->json(['message' => $message]);
+        }catch(\Exception $e){
+            DB::rollback();
+            Log::info($e->getMessage());
+            return response()->json(['error_message' => 'Failed to process approval. Please try again.'],500);
         }
+
+
+        
     }
 
     /**
@@ -277,11 +330,28 @@ class UploadRecipientController extends Controller implements HasMiddleware
 
     public function cancel(string $id)
     {
-        $upload = UploadRecipient::where('status',1)->findOrFail($id);
-        $upload->update([
-            'status' => -3
-        ]);
 
-        return response()->json(['message' => 'Batch Cancelled']);
+        try{
+
+            DB::beginTransaction();
+                $upload = UploadRecipient::where('status',1)->findOrFail($id);
+                $upload->update([
+                    'status' => -3
+                ]);
+
+                $upload->details()
+                ->update([
+                    'status' => -1,
+                    'serial_number' => 'Canceled'
+                ]);
+            DB::commit();
+
+            return response()->json(['message' => 'Batch Cancelled']);
+        }catch(\Exception $e){
+            DB::rollback();
+            Log::info($e->getMessage());
+            return response()->json(['error_message' => 'Failed to cancel batch. Please try again.'],500);
+        }
+       
     }
 }

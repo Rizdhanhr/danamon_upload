@@ -16,6 +16,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title')</title>
     <!-- CSS files -->
+    <link rel="icon" type="image/png" href="{{ asset('template/images/icon_more.png') }}">
     <link href="{{ asset('template') }}/dist/css/tabler.min.css?1684106062" rel="stylesheet" />
     <link href="{{ asset('template') }}/dist/css/tabler-flags.min.css?1684106062" rel="stylesheet" />
     <link href="{{ asset('template') }}/dist/css/tabler-payments.min.css?1684106062" rel="stylesheet" />

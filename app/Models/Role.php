@@ -11,7 +11,7 @@ class Role extends Model
     use HasFactory, SoftDeletes;
  
     protected $table = 'role';
-    protected $fillable = ['name','description','created_at','updated_at','deleted_at'];
+    protected $fillable = ['name','description','created_at','updated_at','deleted_at','is_super_admin','is_system','is_default_sso'];
 
     public function user(){
         return $this->hasMany(User::class,'role_id','id');

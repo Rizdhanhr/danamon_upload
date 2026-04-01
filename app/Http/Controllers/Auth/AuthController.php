@@ -31,7 +31,7 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
         
-        $user = User::where('email', $request->username)->first();
+        $user = User::where('email', $request->username)->where('provider','local')->first();
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
                 'error_message' => 'Invalid credentials'
@@ -111,9 +111,19 @@ class AuthController extends Controller
 
 
     public function logout(Request $request){
+        $user = Auth::user();
+
         Auth::logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+    
+        if ($user && $user->provider !== 'local') {
+            return redirect()->away(config('services.sso.client_link'));
+        }
+
+    
         return redirect()->route('login.index');
     }
 

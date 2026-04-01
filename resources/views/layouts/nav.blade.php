@@ -58,7 +58,15 @@
                             </a>
                         </li>
                     @endcan
-
+                    <li class="nav-item {{ request()->routeIs('report-recipient.*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('report-recipient.index') }}">
+                            <i class="bi bi-journal"></i>
+                            &nbsp;
+                            <span class="nav-link-title">
+                                Report Recipient
+                            </span>
+                        </a>
+                    </li>
                     @canany(['VIEW-ROLE', 'VIEW-USER'])
                         <li class="nav-item dropdown  {{ request()->routeIs(['user.*', 'role.*']) ? 'active' : '' }}">
                             <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
@@ -90,6 +98,7 @@
                             </div>
                         </li>
                     @endcanany
+
                 </ul>
                 <div class="my-2 my-md-0 flex-grow-1 flex-md-grow-0 order-first order-md-last">
 

@@ -103,6 +103,12 @@
                                 </tr>
                             @endif
                             <tr>
+                                <th>Original Filename</th>
+                                <td>
+                                    {{ $upload->original_filename ?? '-' }}
+                                </td>
+                            </tr>
+                            <tr>
                                 <th>Original File</th>
                                 <td>
                                     @if ($upload->path)
@@ -188,12 +194,16 @@
                     <table id="example" class="table table-striped table-bordered" style="width:100%">
                         <thead>
                             <tr>
-                                <th>Name</th>
+                                <th style="display:none;">ID</th> <!-- 🔥 wajib -->
+                                <th width="18%">Name</th>
                                 <th width="15%">Mobile Num</th>
                                 <th width="20%">Product</th>
+                                <th>Pol Num</th>
                                 {{-- <th width="15%">Bank Name</th> --}}
                                 <th width="15%">Bank Account</th>
                                 <th width="17%">Amount</th>
+                                <th width="17%">Bank BR Code</th>
+                                <th width="17%">Valid Phone</th>
                                 <th width="13%">Status</th>
                                 {{-- <th width="12%">Pol Num</th> --}}
                             </tr>
@@ -257,21 +267,40 @@
         var table = $('#example').DataTable({
             processing: true,
             serverSide: true,
+            scrollX: true,
+            autoWidth: false,
+
+            scrollCollapse: true,
+            order: [
+                [0, 'asc']
+            ],
             ajax: {
                 url: link,
                 type: 'POST',
             },
             columns: [{
+                    data: 'id',
+                    name: 'id',
+                    visible: false
+                }, {
                     data: 'name',
-                    name: 'name'
+                    name: 'name',
+                    width: '300px'
                 },
                 {
                     data: 'phone',
-                    name: 'phone'
+                    name: 'phone',
+
                 },
                 {
                     data: 'product_name',
-                    name: 'product_name'
+                    name: 'product_name',
+                    width: '300px'
+                },
+                {
+                    data: 'pol_num',
+                    name: 'pol_num',
+
                 },
                 {
                     data: 'bank_account',
@@ -282,12 +311,71 @@
                     name: 'amount'
                 },
                 {
+                    data: 'bank_br_code',
+                    name: 'bank_br_code'
+                },
+
+                {
+                    data: 'valid_phone',
+                    name: 'valid_phone',
+                    searchable: false,
+                    orderable: false,
+                    className: "text-center",
+                },
+                {
                     data: 'status',
-                    name: 'staus',
+                    name: 'status',
                     className: "text-center",
                     searchable: false,
                 },
             ],
+            columnDefs: [{
+                    targets: 1,
+                    width: '180px',
+                    createdCell: (td) => $(td).css('min-width', '180px')
+                }, // Phone
+                {
+                    targets: 2,
+                    width: '200px',
+                    createdCell: (td) => $(td).css('min-width', '200px')
+                }, // Product
+                {
+                    targets: 3,
+                    width: '120px',
+                    createdCell: (td) => $(td).css('min-width', '150px')
+                }, // Pol Num
+                {
+                    targets: 4,
+                    width: '150px',
+                    createdCell: (td) => $(td).css('min-width', '150px')
+                }, // Bank Account
+                {
+                    targets: 5,
+                    width: '120px',
+                    createdCell: (td) => $(td).css('min-width', '150px')
+                }, // Amount
+                {
+                    targets: 6,
+                    width: '100px',
+                    createdCell: (td) => $(td).css('min-width', '150px')
+                },
+                {
+                    targets: 7,
+                    width: '120px',
+                    createdCell: (td) => $(td).css('min-width', '120px')
+                },
+                {
+                    targets: 8,
+                    width: '120px',
+                    createdCell: (td) => $(td).css('min-width', '120px')
+                },
+                {
+                    targets: 9,
+                    width: '120px',
+                    createdCell: (td) => $(td).css('min-width', '120px')
+                },
+
+            ]
         });
 
 

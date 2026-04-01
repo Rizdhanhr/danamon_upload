@@ -39,7 +39,7 @@ class UserController extends Controller implements HasMiddleware
         return Datatables::of($user)
         ->addColumn('action', function ($row){
             $action = '';
-                if($row->role->is_super_admin != 1 && Gate::any(['UPDATE-USER','DELETE-USER']) && $row->id != Auth::id()){
+                if($row->role->is_super_admin != 1 && $row->provider === 'local' && Gate::any(['UPDATE-USER','DELETE-USER']) && $row->id != Auth::id()){
                     $action .=
                     '<div class="dropdown">
                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -121,7 +121,7 @@ class UserController extends Controller implements HasMiddleware
     public function edit(string $id)
     {
         $user = User::with('role')->findOrFail($id);
-        if($user->role->is_super_admin === 1 || $user->id === Auth::user()->id){
+        if($user->role->is_super_admin === 1 || $user->id === Auth::user()->id || $user->provuder != 'local'){
             abort(403);
         } 
         
@@ -141,7 +141,7 @@ class UserController extends Controller implements HasMiddleware
         ]);
 
         $user = User::with('role')->findOrFail($id);
-        if($user->role->is_super_admin === 1 || $user->id === Auth::user()->id){
+        if($user->role->is_super_admin === 1 || $user->id === Auth::user()->id || $user->provuder != 'local'){
             abort(403);
         } 
 
@@ -172,7 +172,7 @@ class UserController extends Controller implements HasMiddleware
     public function destroy(string $id)
     {
         $user = User::with('role')->findOrFail($id);
-        if($user->role->is_super_admin === 1 || $user->id === Auth::user()->id){
+        if($user->role->is_super_admin === 1 || $user->id === Auth::user()->id || $user->provuder != 'local'){
             abort(403);
         } 
         $user->delete();

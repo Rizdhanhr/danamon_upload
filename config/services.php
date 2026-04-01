@@ -35,4 +35,8 @@ return [
         'project_id' => env('GOOGLE_CLOUD_PROJECT_ID'),
         'credentials_path' => env('GOOGLE_CLOUD_APPLICATION_CREDENTIALS'),
     ],
+    'sso' => [
+        'public_key' => env('SSO_PUBLIC_KEY'),
+        'client_link' => env('SSO_CLIENT_LINK'),
+    ],
 ];

@@ -7,10 +7,13 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UploadRecipientController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportRecipientController;
+use App\Http\Controllers\ExternalAuthController;
 
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+
 
 
 Route::middleware(['guest'])->group(function () {
@@ -18,6 +21,8 @@ Route::middleware(['guest'])->group(function () {
     Route::post('/login',[AuthController::class,'login'])->name('login.post');
     Route::post('/login/recaptcha',[AuthController::class,'verifyRecaptcha'])->name('login.recaptcha');
     Route::post('/login/otp',[AuthController::class,'verifyOtp'])->name('login.otp');
+
+    Route::get('/external-auth',[ExternalAuthController::class,'handle'])->name('external.auth');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -27,6 +32,7 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::get('/profile',[ProfileController::class,'index'])->name('profile.index');
+    Route::post('/profile/update',[ProfileController::class,'update'])->name('profile.update');
     
     //Access Management
     //Role
@@ -46,5 +52,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/upload-recipient/export/{id}', [UploadRecipientController::class,'export'])->name('upload-recipient.export');
     Route::resource('/upload-recipient', UploadRecipientController::class)->only(['index','show','store','create']);
   
+
+    Route::get('/report/recipient', [ReportRecipientController::class,'index'])->name('report-recipient.index');
+    Route::post('/report/recipient/data', [ReportRecipientController::class,'getData'])->name('report-recipient.data');
 });
 

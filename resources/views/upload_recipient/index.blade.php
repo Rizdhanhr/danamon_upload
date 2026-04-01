@@ -68,6 +68,7 @@
                         <thead>
                             <tr>
                                 <th>Batch Name</th>
+                                <th width="10%">Original Filename</th>
                                 <th width="10%">Total Recipient</th>
                                 <th width="15%">Total Amount</th>
                                 <th width="10%">Created At</th>
@@ -139,20 +140,25 @@
             processing: true,
             serverSide: true,
             order: [
-                [3, 'desc']
+                [4, 'desc']
             ],
             ajax: {
                 url: "{{ route('upload-recipient.data') }}",
                 type: 'POST',
                 data: function(d) {
-                    d.start = $('#start').val();
-                    d.end = $('#end').val();
+                    d.start_date = $('#start').val();
+                    d.end_date = $('#end').val();
                     d.status = $('#status').val();
+
                 }
             },
             columns: [{
                     data: 'name',
                     name: 'name'
+                },
+                {
+                    data: 'original_filename',
+                    name: 'original_filename'
                 },
                 {
                     data: 'total_recipient',
