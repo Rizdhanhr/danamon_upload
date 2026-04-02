@@ -1,4 +1,4 @@
-@extends('emails.layouts.main')
+@extends('email.layouts')
 @section('title', 'OTP Code')
 @section('content')
     <div style="font-size:22px;font-weight:600;color:#111827;margin-bottom:8px;">

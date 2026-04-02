@@ -21,8 +21,7 @@ class UploadRecipient extends Model
         });
     }   
 
-     public function creator()
-    {
+    public function creator(){
         return $this->belongsTo(User::class, 'created_by');
     }
 

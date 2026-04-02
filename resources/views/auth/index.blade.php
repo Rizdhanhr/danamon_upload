@@ -168,6 +168,7 @@
                 },
                 function(errors) {
                     btnSend.prop("disabled", false);
+
                     if (errors.status == 403) {
                         alert.show().html(icons + ' ' + errors.responseJSON.error_message);
                     }
@@ -210,7 +211,7 @@
                 url: "{{ route('login.otp') }}",
                 data: data,
                 success: function(result) {
-                    window.location.href = "{{ route('dashboard.index') }}";
+                    window.location.href = result.redirect;
                 },
                 error: function(error) {
                     btnVerify.prop("disabled", false);

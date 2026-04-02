@@ -4,19 +4,23 @@ use Excel;
 use App\Models\UploadRecipient;
 use App\Models\UploadRecipientDetail;
 use App\Imports\UploadRecipient as UploadRecipientImport;
+use Carbon\Carbon;
 use Validator;
 use DB;
 use Log;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Reader\IReadFilter;
+use App\Traits\SendEmail;
+use App\Models\User;
 
 
 class ProcessRecipientService
 {
+    use SendEmail;
+
     public function run() {
-       $recipient = UploadRecipient::where('status', 0)
+       $recipient = UploadRecipient::with('creator')->where('status', 0)
        ->orderBy('created_at', 'ASC')
-       ->select('*')
        ->limit(5)
        ->get();
 
@@ -83,6 +87,29 @@ class ProcessRecipientService
                     'total_amount' => $totalAmount,
                     'template' => $sms,
                 ]);
+
+                $data = [
+                    'name' => $r->name,
+                    'original_filename' => $r->original_filename,
+                    'total_recipient' => $totalRecipient,
+                    'total_amount' => number_format($totalAmount, 0, ',', '.'),
+                    'scheduled_at' => Carbon::parse($r->scheduled_at)->format('Y-m-d H:i:s'),
+                    'created_at' => Carbon::parse($r->created_at)->format('Y-m-d H:i:s'),
+                    'created_by' => $r->creator ? $r->creator->name : 'System',
+                    'approval_url' => url(route('upload-recipient.show', $r->id)),
+                ];
+
+                $html = view('email.approval', $data)->render();
+                $checker = User::whereHas('role.permission', function ($q) {
+                    $q->where('slug', 'APPROVE-UPLOAD-RECIPIENT');
+                })->get();
+                
+
+                foreach($checker as $c){
+                    $this->sendMail($c->email,'Upload Recipient Approval', $html,'info@get-intouch.com');
+                    // Log::info('kirim sukses');
+                }
+
             DB::commit();
         }catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             DB::rollback();

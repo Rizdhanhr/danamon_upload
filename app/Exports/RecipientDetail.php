@@ -63,7 +63,7 @@ class RecipientDetail implements FromQuery,
             "),
             DB::raw("
                 CASE 
-                    WHEN valid_phone > 0 THEN dr_date
+                    WHEN sms_status > 0 THEN dr_date
                     ELSE '-'
                 END as SMS
             "),
@@ -110,12 +110,12 @@ class RecipientDetail implements FromQuery,
             ],
         ]);
 
-        $sheet->getStyle('F1:G1')->applyFromArray([
-            'fill' => [
-                'fillType' => 'solid',
-                'startColor' => ['rgb' => 'FFFF00'],
-            ],
-        ]);
+        // $sheet->getStyle('F1:G1')->applyFromArray([
+        //     'fill' => [
+        //         'fillType' => 'solid',
+        //         'startColor' => ['rgb' => 'FFFF00'],
+        //     ],
+        // ]);
 
         return [];
     }

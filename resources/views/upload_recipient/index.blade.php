@@ -139,6 +139,9 @@
         var table = $('#example').DataTable({
             processing: true,
             serverSide: true,
+            scrollX: true,
+            autoWidth: false,
+            scrollCollapse: true,
             order: [
                 [4, 'desc']
             ],
@@ -190,6 +193,49 @@
                     orderable: false
                 },
             ],
+            columnDefs: [{
+                    targets: 0,
+                    width: '180px',
+                    createdCell: (td) => $(td).css('min-width', '180px')
+                }, // Phone
+                {
+                    targets: 1,
+                    width: '200px',
+                    createdCell: (td) => $(td).css('min-width', '200px')
+                }, // Product
+                {
+                    targets: 2,
+                    width: '200px',
+                    createdCell: (td) => $(td).css('min-width', '200px')
+                }, // Product
+                {
+                    targets: 3,
+                    width: '120px',
+                    createdCell: (td) => $(td).css('min-width', '150px')
+                }, // Pol Num
+                {
+                    targets: 4,
+                    width: '150px',
+                    createdCell: (td) => $(td).css('min-width', '150px')
+                }, // Bank Account
+                {
+                    targets: 5,
+                    width: '120px',
+                    createdCell: (td) => $(td).css('min-width', '150px')
+                }, // Amount
+                {
+                    targets: 6,
+                    width: '100px',
+                    createdCell: (td) => $(td).css('min-width', '150px')
+                },
+                {
+                    targets: 7,
+                    width: '120px',
+                    createdCell: (td) => $(td).css('min-width', '120px')
+                },
+
+
+            ]
         });
 
 

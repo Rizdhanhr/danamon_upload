@@ -8,11 +8,20 @@ use Illuminate\Support\Facades\Gate;
 use App\Models\UploadRecipient;
 use Carbon\Carbon;
 use DB;
+use App\Models\User;
 
 
 class DashboardController extends Controller
 {
     public function index(){
+
+
+
+        // return view('email.approval');
+      
+
+        // DD($users);
+
         $total_recipient = UploadRecipient::where('status',3)
         ->whereMonth('created_at', now()->month)
         ->whereYear('created_at', now()->year)

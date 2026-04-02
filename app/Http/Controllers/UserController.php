@@ -121,7 +121,7 @@ class UserController extends Controller implements HasMiddleware
     public function edit(string $id)
     {
         $user = User::with('role')->findOrFail($id);
-        if($user->role->is_super_admin === 1 || $user->id === Auth::user()->id || $user->provuder != 'local'){
+        if($user->role->is_super_admin === 1 || $user->id === Auth::user()->id || $user->provider != 'local'){
             abort(403);
         } 
         
@@ -141,7 +141,7 @@ class UserController extends Controller implements HasMiddleware
         ]);
 
         $user = User::with('role')->findOrFail($id);
-        if($user->role->is_super_admin === 1 || $user->id === Auth::user()->id || $user->provuder != 'local'){
+        if($user->role->is_super_admin === 1 || $user->id === Auth::user()->id || $user->provider != 'local'){
             abort(403);
         } 
 
@@ -172,7 +172,7 @@ class UserController extends Controller implements HasMiddleware
     public function destroy(string $id)
     {
         $user = User::with('role')->findOrFail($id);
-        if($user->role->is_super_admin === 1 || $user->id === Auth::user()->id || $user->provuder != 'local'){
+        if($user->role->is_super_admin === 1 || $user->id === Auth::user()->id || $user->provider != 'local'){
             abort(403);
         } 
         $user->delete();
