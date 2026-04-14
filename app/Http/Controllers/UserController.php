@@ -140,6 +140,17 @@ class UserController extends Controller implements HasMiddleware
             'role' => 'required',
         ]);
 
+        //  $tokenDariForm = $request->input('_token');
+
+        // // 2. Cek token yang ada di SESSION server
+        // $tokenDiServer = csrf_token();
+
+        // dd([
+        //     'token_dari_form' => $tokenDariForm,
+        //     'token_di_server' => $tokenDiServer,
+        //     'apakah_cocok'    => ($tokenDariForm === $tokenDiServer)
+        // ]);
+
         $user = User::with('role')->findOrFail($id);
         if($user->role->is_super_admin === 1 || $user->id === Auth::user()->id || $user->provider != 'local'){
             abort(403);

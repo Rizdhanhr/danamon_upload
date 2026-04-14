@@ -59,7 +59,7 @@ class AuthController extends Controller
     }
 
     public function verifyRecaptcha(Request $request){
-        // return response()->json(['message' => 'reCAPTCHA Success'], 200);
+        return response()->json(['message' => 'reCAPTCHA Success'], 200);
         $token = $request->token;
         $projectId = config('services.google_cloud.project_id');  // ganti dengan Project ID di Google Cloud
         $siteKey = config('services.google_cloud.site_key');

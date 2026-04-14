@@ -129,11 +129,23 @@
         </div>
         <div class="card mb-4">
             @if ($upload->status > 2)
-                <div class="card-header">
+                <div class="card-header d-flex gap-2">
                     <a href="{{ route('upload-recipient.export', $upload->id) }}"
                         class="btn btn-primary btn-sm rounded-pill px-4 shadow-sm fw-semibold">
                         <i class="bi bi-download me-1"></i> Download Report
                     </a>
+                    @can('CREATE-UPLOAD-RECIPIENT')
+                        {{-- @if ($upload->summary_amount > 0) --}}
+                        <form action="{{ route('upload-recipient.notify_finance', $upload->id) }}" method="POST"
+                            class="d-inline" onsubmit="return confirmSendEmail(event)">
+                            @csrf
+                            <button type="submit" class="btn btn-success btn-sm rounded-pill px-4 shadow-sm fw-semibold">
+                                <i class="bi bi-envelope me-1"></i> Mail Finance
+                            </button>
+                        </form>
+                        {{-- @endif --}}
+                    @endcan
+
                 </div>
             @endif
             <div class="card-body">
@@ -263,6 +275,9 @@
     <script>
         let id = "{{ $upload->id }}";
         let link = "{{ route('upload-recipient.detail_data', ':id') }}";
+        let isNotify = {{ $upload->flag_info_marketing == 1 ? 'true' : 'false' }};
+        console.log(isNotify);
+
         link = link.replace(':id', parseInt(id));
         var table = $('#example').DataTable({
             processing: true,
@@ -432,6 +447,42 @@
         function showFailedModal(text) {
             $('#failedText').text(text || '');
             $('#failedModal').modal('show');
+        }
+
+        function confirmSendEmail(e) {
+
+
+            if (!isNotify) {
+                // ✅ langsung submit tanpa alert
+                return true;
+            }
+
+
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Email already sent',
+                text: 'This report has already been sent to finance. Do you want to send it again?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Confirm'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Sending...',
+                        text: 'Please wait',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            e.target.submit();
+                        }
+                    });
+                }
+            });
+
+            return false;
         }
     </script>
 @endpush

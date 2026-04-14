@@ -107,7 +107,6 @@ class ProcessRecipientService
 
                 foreach($checker as $c){
                     $this->sendMail($c->email,'Upload Recipient Approval', $html,'info@get-intouch.com');
-                    // Log::info('kirim sukses');
                 }
 
             DB::commit();

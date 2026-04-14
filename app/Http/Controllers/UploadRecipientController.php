@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use DataTables;
 use Excel;
+use App\Models\FinanceNotification;
 use App\Models\UploadRecipient;
 use App\Models\UploadRecipientDetail;
 use App\Exports\RecipientDetail as RecipientDetailExport;
@@ -14,6 +15,7 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Log;
 use DB;
+use Auth;
 
 class UploadRecipientController extends Controller implements HasMiddleware
 {
@@ -353,5 +355,24 @@ class UploadRecipientController extends Controller implements HasMiddleware
             return response()->json(['error_message' => 'Failed to cancel batch. Please try again.'],500);
         }
        
+    }
+
+    public function notifyFinance($id){
+        try{
+            DB::beginTransaction();
+              $upload = UploadRecipient::where('status','>',2)->findOrFail($id);
+              FinanceNotification::create([
+                'upload_recipient_id' => $id,
+                'created_by' => Auth::id()
+              ]);
+              $upload->flag_info_marketing = 1;
+              $upload->save();
+            DB::commit();
+           return redirect()->back()->with('success', 'Email request is being processed');
+        }catch(\Exception $e){
+            Log::info($e->getMessage());
+            DB::rollback();
+            return redirect()->back()->with('error', 'Failed to notif finance. Please try again.');
+        }
     }
 }

@@ -50,6 +50,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/upload-recipient/download', [UploadRecipientController::class,'download'])->name('upload-recipient.download');
     Route::get('/upload-recipient/download/{id}', [UploadRecipientController::class,'downloadOriginal'])->name('upload-recipient.download_original');
     Route::get('/upload-recipient/export/{id}', [UploadRecipientController::class,'export'])->name('upload-recipient.export');
+    Route::post('/upload-recipient/{id}/notify-finance',[UploadRecipientController::class,'notifyFinance'])->name('upload-recipient.notify_finance');
     Route::resource('/upload-recipient', UploadRecipientController::class)->only(['index','show','store','create']);
   
 

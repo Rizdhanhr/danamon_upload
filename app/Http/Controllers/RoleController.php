@@ -170,6 +170,8 @@ class RoleController extends Controller implements HasMiddleware
             'description' => 'required|max:255'
         ]);
 
+       
+
         $role = Role::findOrFail($id);
         if($role->is_system === 1 || $role->id === Auth::user()->role_id){
             abort(403);
